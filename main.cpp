@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "ArbolB.hpp"
 using namespace std;
 
 int main()
