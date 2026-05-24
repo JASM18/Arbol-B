@@ -1,11 +1,6 @@
 #include <iostream>
 #include "ArbolB.hpp"
-<<<<<<< Updated upstream
-#include "GeneradorPruebas.hpp"
-
-=======
 #include "Menu.hpp"
->>>>>>> Stashed changes
 using namespace std;
 
 int main() {
@@ -17,13 +12,10 @@ int main() {
         cout << "      PRUEBAS: ARBOL B (GRADO 5)       " << endl;
         cout << "=======================================" << endl << endl;
 
-<<<<<<< Updated upstream
         cout << "1. Llenando el Arbol con numeros aleatorios..." << endl;
-        LlenarArbolAleatorio(arbol, 30, 1, 200); // Insertamos 20 numeros entre 1 y 50
 
-=======
+
         defDatosAleatorios(arbol, 30);
->>>>>>> Stashed changes
 
         cout << "\n2. Estado del Arbol despues de las inserciones:" << endl;
         cout << "Numero total de claves: " << arbol.ObtenerNumClaves() << endl;

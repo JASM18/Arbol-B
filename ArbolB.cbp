@@ -36,13 +36,8 @@
 		</Compiler>
 		<Unit filename="ArbolB.hpp" />
 		<Unit filename="ArbolB.tpp" />
-<<<<<<< Updated upstream
-		<Unit filename="GeneradorPruebas.hpp" />
-		<Unit filename="GeneradorPruebas.tpp" />
-=======
 		<Unit filename="Menu.hpp" />
 		<Unit filename="Menu.tpp" />
->>>>>>> Stashed changes
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>
