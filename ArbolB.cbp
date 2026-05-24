@@ -36,6 +36,8 @@
 		</Compiler>
 		<Unit filename="ArbolB.hpp" />
 		<Unit filename="ArbolB.tpp" />
+		<Unit filename="GeneradorPruebas.hpp" />
+		<Unit filename="GeneradorPruebas.tpp" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>
