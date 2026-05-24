@@ -34,9 +34,13 @@
 // La operacion de dividir el arbol se ejecuta cuando se intenta tener mas claves de las permitidas
 // (Mgrado claves cuando a lo mucho se puede Mgrado-1). La clave del medio (indice Mgrado/2) sube al padre.
 
+//***********************************************
+
 template<typename T, int Mgrado> class ArbolB;
 template<typename T, int Mgrado>
 std::ostream& operator<<(std::ostream& salida, const ArbolB<T, Mgrado>& arbol);
+
+//***********************************************
 
 template <typename T, int Mgrado>
 class ArbolB {
@@ -73,6 +77,15 @@ public:
         virtual const char *what() const throw();
     };
 
+    /**
+     * \brief Excepcion lanzada cuando ocurren fallos de memoria dinamica.
+     */
+    class ArbolGrado : public std::exception {
+    public:
+        ArbolGrado() throw();
+        virtual const char *what() const throw();
+    };
+
 private:
 
     int numClaves; // Total de claves en todo el arbol
@@ -89,9 +102,9 @@ private:
 
     // Funciones de utileria.
 
-    // Agregar usa el estilo "hacia arriba": la funcion privada recursiva inserta en
-    // la hoja correspondiente; si hubo division, regresa por referencia la clave
-    // promovida y el nuevo nodo derecho. El llamador (el padre) decide si tambien
+    // Agregar usa el estilo "hacia arriba": la funcion privada recursiva inserta en la hoja correspondiente;
+    // si hubo division, regresa por referencia la clave promovida y el nuevo nodo derecho.
+    // El llamador (el padre) decide si tambien
     // se desborda o no.
     bool Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo *&hijoNuevo, bool &huboDivision);
 

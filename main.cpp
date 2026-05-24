@@ -1,27 +1,40 @@
 #include <iostream>
-
 #include "ArbolB.hpp"
 
 using namespace std;
 
-int main()
-{
-    ArbolB<int, -3> arbolito;
+int main() {
+    try {
+        // Creamos un Arbol B de grado 5 (Max 4 claves por nodo, minimo 2)
+        ArbolB<int, 5> arbol;
 
-    cout << "Hola prueba: " << arbolito.ObtenerGrado() << endl;
+        cout << "=======================================" << endl;
+        cout << "      PRUEBAS: ARBOL B (GRADO 5)       " << endl;
+        cout << "=======================================" << endl << endl;
 
-    /*
-    cout << arbolito;
+        cout << "1. Insertando valores del 1 al 15 para forzar divisiones..." << endl;
+        for(int i = 1; i <= 30; ++i) {
+            arbol.Agregar(i);
+        }
 
-    arbolito.Agregar(10);
+        cout << "\n2. Estado del Arbol despues de las inserciones:" << endl;
+        cout << "Numero total de claves: " << arbol.ObtenerNumClaves() << endl;
+        cout << "Altura del arbol: " << arbol.ObtenerAltura() << endl;
 
-    cout << arbolito;
+        cout << "\n3. Impresion por niveles (Estructura interna):" << endl;
+        arbol.ImprimirPorNiveles();
 
-    for(int i = 1 ; i < 10 ; ++i){
-        cout << "========" << endl;
-        arbolito.Agregar(i);
-        cout << arbolito << endl;
+        cout << "\n4. Impresion como Arbol (Acostado):" << endl;
+        cout << arbol; // Probando el operator<< sobrecargado
+
+        cout << "\n5. Pruebas de Busqueda:" << endl;
+        cout << "Buscando el 6: " << (arbol.Buscar(6) ? "Encontrado" : "No encontrado") << endl;
+        cout << "Buscando el 99: " << (arbol.Buscar(99) ? "Encontrado" : "No encontrado") << endl;
+
+    } catch (const exception& e) {
+        cerr << "\nError atrapado: " << e.what() << endl;
     }
-    */
+
+    cout << "\n--- Pruebas de insercion finalizadas ---" << endl;
     return 0;
 }

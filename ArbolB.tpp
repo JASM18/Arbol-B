@@ -1,40 +1,4 @@
-//#include <iostream>
-
 #include "Cola.hpp"
-
-//***********************************************
-// CONSTRUCTOR DE NODO
-//***********************************************
-
-template<typename T, int Mgrado>
-ArbolB<T, Mgrado>::Nodo::Nodo() : numClaves(0), esHoja(true), claves(nullptr), hijos(nullptr)
-{
-    // Pedimos espacio para un extra: Mgrado claves y Mgrado+1 hijos,
-    // aunque el maximo permitido sea Mgrado-1 y Mgrado respectivamente.
-    // Ese espacio extra es para poder insertar primero y dividir despues.
-    try{
-        claves = new T[Mgrado];
-        hijos = new Nodo*[Mgrado + 1];
-    }catch(const std::bad_alloc&){
-        delete[] claves;        // si claves se asigno y hijos fallo, lo limpiamos
-        throw ArbolNoMemoria();
-    }
-
-    // Inicializamos todos los punteros a hijos en nullptr.
-    for(int i = 0; i <= Mgrado; ++i){
-        hijos[i] = nullptr;
-    }
-}
-
-//***********************************************
-
-template<typename T, int Mgrado>
-ArbolB<T, Mgrado>::Nodo::~Nodo()
-{
-    // Solo liberamos los arreglos. La destruccion recursiva la hace Podar.
-    delete[] claves;
-    delete[] hijos;
-}
 
 //***********************************************
 // CONSTRUCTORES DEL ARBOL
@@ -43,6 +7,7 @@ ArbolB<T, Mgrado>::Nodo::~Nodo()
 template<typename T, int Mgrado>
 ArbolB<T, Mgrado>::ArbolB() : numClaves(0), raiz(nullptr)
 {
+
 }
 
 //***********************************************
@@ -74,34 +39,71 @@ ArbolB<T, Mgrado> & ArbolB<T, Mgrado>::operator=(const ArbolB &arbol)
 }
 
 //***********************************************
+// CONSTRUCTOR DE NODO
+//***********************************************
+
+template<typename T, int Mgrado>
+ArbolB<T, Mgrado>::Nodo::Nodo() : numClaves(0), esHoja(true), claves(nullptr), hijos(nullptr)
+{
+    // Pedimos espacio para un extra: Mgrado claves y Mgrado+1 hijos,
+    // El maximo permitido es Mgrado-1 y Mgrado, pero se le pone un espacio extra para poder insertar primero y dividir despues
+    try{
+        claves = new T[Mgrado];
+        hijos = new Nodo*[Mgrado + 1];
+
+    }catch(const std::bad_alloc&){
+        delete[] claves; // por si claves se asigno y hijos fallo
+        throw ArbolNoMemoria();
+    }
+
+    // Inicializamos todos los punteros a hijos en nullptr.
+    for(int i = 0; i <= Mgrado; ++i){
+        hijos[i] = nullptr;
+    }
+}
+
+//***********************************************
+
+template<typename T, int Mgrado>
+ArbolB<T, Mgrado>::Nodo::~Nodo()
+{
+    // Solo liberamos los arreglos. La destruccion recursiva la hace Podar
+    delete[] claves;
+    delete[] hijos;
+}
+
+//***********************************************
 // METODOS PUBLICOS
 //***********************************************
 
 template<typename T, int Mgrado>
 bool ArbolB<T, Mgrado>::Agregar(T valor)
 {
-    // Caso 1: arbol vacio. Creamos la raiz con esta unica clave.
+    // Si el arbol esta vacio: se crea la raiz con esta unica clave
     if(raiz == nullptr){
+
         try{
             raiz = new Nodo();
+
         }catch(const std::bad_alloc&){
             throw ArbolNoMemoria();
         }
+
         raiz->claves[0] = valor;
-        raiz->numClaves = 1;
-        ++numClaves;
+        raiz->numClaves = 1; // la raíz tiene 1 clave
+        ++numClaves; // se le suma +1 clave del contador global del arbol
         return true;
     }
 
-    // Caso 2: el arbol no esta vacio. Insertamos recursivamente.
-    T clavePromovida;
-    Nodo *hijoNuevo = nullptr;
+    // Si el arbol no esta vacio, entonces se inserta recursivamente
+    T clavePromovida; //k_med
+    Nodo *hijoNuevo = nullptr; // hijo derecho resultado de la división del nodo (si es que hubo claro)
     bool huboDivision = false;
 
     bool seAgrego = Agregar(valor, raiz, clavePromovida, hijoNuevo, huboDivision);
 
-    // Caso 3: si la raiz se dividio durante la recursion, creamos una nueva raiz.
-    // Esta es la unica forma en que un arbol B crece en altura.
+    // Si la raiz se dividio durante la recursion, se crea una nueva raiz.
+    // Nota: ssta es la unica forma en que un arbol B crece en altura
     if(huboDivision){
         Nodo *nuevaRaiz;
         try{
@@ -353,7 +355,9 @@ const char *ArbolB<T, Mgrado>::ArbolNoMemoria::what() const throw()
 
 template<typename T, int Mgrado>
 bool ArbolB<T, Mgrado>::Eliminar(T)
-{ return false; }
+{
+    return false;
+}
 
 template<typename T, int Mgrado>
 void ArbolB<T, Mgrado>::ImprimirPorNiveles() const
@@ -407,13 +411,22 @@ void ArbolB<T, Mgrado>::ImprimirComoArbol() const
 }
 
 template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Eliminar(T, Nodo*) { return false; }
+bool ArbolB<T, Mgrado>::Eliminar(T, Nodo*)
+{
+    return false;
+}
 
 template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::CopiarPorNiveles(const ArbolB&) {}
+void ArbolB<T, Mgrado>::CopiarPorNiveles(const ArbolB&)
+{
+
+}
 
 template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::RepararHijo(Nodo*, int) {}
+void ArbolB<T, Mgrado>::RepararHijo(Nodo*, int)
+{
+
+}
 
 template<typename T, int Mgrado>
 void ArbolB<T, Mgrado>::ImprimirComoArbol(Nodo *subRaiz, int nivel) const
