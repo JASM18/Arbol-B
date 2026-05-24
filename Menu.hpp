@@ -1,10 +1,22 @@
 #ifndef MENU_HPP_INCLUDED
 #define MENU_HPP_INCLUDED
 
-#include "ArbolB"
+#include "ArbolB.hpp"
 
-// numDatos es la cantidad de datos aleatorios que va a meter
-template <typename T>
-void defDatosAleatorios(ArbolB &arbolito, int numDatos);
+/**
+ * @brief Llena el arbol con `numDatos` enteros aleatorios.
+ *
+ *  El rango se calcula automaticamente como [1, numDatos * 10].
+ *  Si Agregar() retorna false (duplicado), el valor se omite y se reporta.
+ *
+ * @tparam T       Tipo de dato del arbol.
+ * @tparam Mgrado  Grado del arbol B.
+ * @param arbolito Referencia al arbol que se va a llenar.
+ * @param numDatos Cantidad de inserciones a intentar.
+ */
+template<typename T, int Mgrado>
+void defDatosAleatorios(ArbolB<T, Mgrado>& arbolito, int numDatos);
+
+#include "Menu.tpp"
 
 #endif // MENU_HPP_INCLUDED

@@ -36,6 +36,8 @@
 		</Compiler>
 		<Unit filename="ArbolB.hpp" />
 		<Unit filename="ArbolB.tpp" />
+		<Unit filename="Menu.hpp" />
+		<Unit filename="Menu.tpp" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "ArbolB.hpp"
-
+#include "Menu.hpp"
 using namespace std;
 
 int main() {
@@ -12,10 +12,10 @@ int main() {
         cout << "      PRUEBAS: ARBOL B (GRADO 5)       " << endl;
         cout << "=======================================" << endl << endl;
 
-        cout << "1. Insertando valores del 1 al 15 para forzar divisiones..." << endl;
-        for(int i = 1; i <= 30; ++i) {
-            arbol.Agregar(i);
-        }
+        cout << "1. Llenando el Arbol con numeros aleatorios..." << endl;
+
+
+        defDatosAleatorios(arbol, 30);
 
         cout << "\n2. Estado del Arbol despues de las inserciones:" << endl;
         cout << "Numero total de claves: " << arbol.ObtenerNumClaves() << endl;
