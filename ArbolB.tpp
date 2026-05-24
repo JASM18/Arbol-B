@@ -81,7 +81,7 @@ ArbolB<T, Mgrado>::Nodo::~Nodo()
 template<typename T, int Mgrado>
 void ArbolB<T, Mgrado>::Agregar(T valor)
 {
-    // Si el arbol esta vacio, entonces se crea la raÌz con ese unico valor
+    // Si el arbol esta vacio, entonces se crea la ra√≠z con ese unico valor
     if(raiz == nullptr){
         try{
             raiz = new Nodo();
@@ -95,8 +95,8 @@ void ArbolB<T, Mgrado>::Agregar(T valor)
     }
 
     // Como el arbol no esta vacio, entonces se inserta recursivamente
-    T clavePromovida; // Elemento de en medio que se le dar· al padre en caso de si hubo division
-    Nodo *hijoNuevo = nullptr; // Hijo derecho resultande por la divisiÛn (si es que la hay)
+    T clavePromovida; // Elemento de en medio que se le dar√° al padre en caso de si hubo division
+    Nodo *hijoNuevo = nullptr; // Hijo derecho resultande por la divisi√≥n (si es que la hay)
     bool huboDivision = false;
 
     Agregar(valor, raiz, clavePromovida, hijoNuevo, huboDivision);
@@ -113,7 +113,7 @@ void ArbolB<T, Mgrado>::Agregar(T valor)
             throw ArbolNoMemoria();
         }
 
-        // ConexiÛn manual
+        // Conexi√≥n manual
         nuevaRaiz->esHoja = false;
         nuevaRaiz->numClaves = 1;
         nuevaRaiz->claves[0] = clavePromovida;
@@ -126,7 +126,7 @@ void ArbolB<T, Mgrado>::Agregar(T valor)
 }
 //***********************************************
 
-// AquÌ va Eliminar() (el prototipo de Eliminar() esta abajo del codigo)
+// Aqu√≠ va Eliminar() (el prototipo de Eliminar() esta abajo del codigo)
 
 //***********************************************
 
@@ -193,12 +193,12 @@ void ArbolB<T, Mgrado>::Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo 
         ++i;
     }
 
-    //  Si estamos en una hoja, se intenta insertar ahÌ mero, de lo contrario se baja al hijo de forma recursiva hasta que sea hoja
+    //  Si estamos en una hoja, se intenta insertar ah√≠ mero, de lo contrario se baja al hijo de forma recursiva hasta que sea hoja
     if(subRaiz->esHoja){
 
         // Se inserta la clave en posicion i, corriendo las demas a la derecha.
         for(int j = subRaiz->numClaves ; j > i ; --j){
-            subRaiz->claves[j] = subRaiz->claves[j - 1]; // se mueven los elementos +1 pocisiÛn
+            subRaiz->claves[j] = subRaiz->claves[j - 1]; // se mueven los elementos +1 pocisi√≥n
         }
 
         subRaiz->claves[i] = valor;
@@ -206,7 +206,7 @@ void ArbolB<T, Mgrado>::Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo 
 
     }else{
 
-        // AquÌ se controla la divisiÛn, se baja al hijo 'i' cuando se llama a Agregar(...->hijos[i]), si hubo divisiÛn, entonces aquÌ es donde el padre debe de tomar la clave promovida por el hijo
+        // Aqu√≠ se controla la divisi√≥n, se baja al hijo 'i' cuando se llama a Agregar(...->hijos[i]), si hubo divisi√≥n, entonces aqu√≠ es donde el padre debe de tomar la clave promovida por el hijo
 
         T clavePromHijo;
         Nodo *hijoNuevoSub = nullptr;
@@ -227,7 +227,7 @@ void ArbolB<T, Mgrado>::Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo 
         }
     }
 
-    // Si tras agregar esa nueva clave/nodo se excedio, entonces se debe de dividir y se le reporta al padre (cuando termina la funciÛn)
+    // Si tras agregar esa nueva clave/nodo se excedio, entonces se debe de dividir y se le reporta al padre (cuando termina la funci√≥n)
     if(subRaiz->numClaves == Mgrado){
         DividirNodo(subRaiz, clavePromovida, hijoNuevo);
         huboDivision = true;
@@ -271,7 +271,7 @@ void ArbolB<T, Mgrado>::DividirNodo(Nodo *nodoLleno, T &clavePromovida, Nodo *&h
 
         for(int i = med + 1; i <= Mgrado; ++i){
             nuevoDer->hijos[hijoDest] = nodoLleno->hijos[i];
-            nodoLleno->hijos[i] = nullptr; // Los punteros del nodo izquiero (el que antes estaba lleno) ahora ser·n nulos
+            nodoLleno->hijos[i] = nullptr; // Los punteros del nodo izquiero (el que antes estaba lleno) ahora ser√°n nulos
             ++hijoDest;
         }
     }
@@ -356,9 +356,24 @@ const char *ArbolB<T, Mgrado>::ArbolNoMemoria::what() const throw()
 //***********************************
 
 template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Eliminar(T)
+bool ArbolB<T, Mgrado>::Eliminar(T valor)
 {
-    return false;
+    if(raiz == nullptr) return false;
+
+    bool seElimino = Eliminar(valor, raiz);
+
+    if(seElimino){
+        --numClaves;
+        // Si la raiz quedo vacia tras una fusion, la raiz baja un nivel
+        // Esta es la unica forma en que el arbol decrece en altura
+        if(raiz->numClaves == 0 && !raiz->esHoja){
+            Nodo *viejaRaiz     = raiz;
+            raiz                = raiz->hijos[0];
+            viejaRaiz->hijos[0] = nullptr;
+            delete viejaRaiz;
+        }
+    }
+    return seElimino;
 }
 
 template<typename T, int Mgrado>
@@ -413,9 +428,53 @@ void ArbolB<T, Mgrado>::ImprimirComoArbol() const
 }
 
 template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Eliminar(T, Nodo*)
+bool ArbolB<T, Mgrado>::Eliminar(T valor, Nodo *subRaiz)
 {
-    return false;
+    const int minClaves = (Mgrado / 2) - 1;
+
+    int i = 0;
+    while(i < subRaiz->numClaves && subRaiz->claves[i] < valor){
+        ++i;
+    }
+
+    bool encontrado = (i < subRaiz->numClaves && subRaiz->claves[i] == valor);
+
+    if(encontrado){
+        if(subRaiz->esHoja){
+            // Caso 1: valor en hoja, se borra directo
+            for(int j = i; j < subRaiz->numClaves - 1; ++j){
+                subRaiz->claves[j] = subRaiz->claves[j + 1];
+            }
+            --subRaiz->numClaves;
+            return true;
+        }else{
+            // Caso 2: valor en nodo interno, se reemplaza con sucesor inorden
+            Nodo *sucesorNodo = subRaiz->hijos[i + 1];
+            while(!sucesorNodo->esHoja){
+                sucesorNodo = sucesorNodo->hijos[0];
+            }
+            T sucesor = sucesorNodo->claves[0];
+
+            subRaiz->claves[i] = sucesor;
+
+            bool seElimino = Eliminar(sucesor, subRaiz->hijos[i + 1]);
+
+            if(subRaiz->hijos[i + 1]->numClaves < minClaves){
+                RepararHijo(subRaiz, i + 1);
+            }
+            return seElimino;
+        }
+    }else{
+        // Caso 3: valor no esta aqui, bajar al hijo correspondiente
+        if(subRaiz->esHoja) return false;
+
+        bool seElimino = Eliminar(valor, subRaiz->hijos[i]);
+
+        if(seElimino && subRaiz->hijos[i]->numClaves < minClaves){
+            RepararHijo(subRaiz, i);
+        }
+        return seElimino;
+    }
 }
 
 template<typename T, int Mgrado>
@@ -425,9 +484,115 @@ void ArbolB<T, Mgrado>::CopiarPorNiveles(const ArbolB&)
 }
 
 template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::RepararHijo(Nodo*, int)
+void ArbolB<T, Mgrado>::RepararHijo(Nodo *padre, int indiceHijo)
 {
+    const int minClaves = (Mgrado / 2) - 1;
+    Nodo *hijo = padre->hijos[indiceHijo];
 
+    // Intento 1: prestamo del hermano izquierdo
+    // Si el hermano izquierdo tiene mas claves de las minimas, se le puede pedir prestada una
+    if(indiceHijo > 0){
+        Nodo *hermIzq = padre->hijos[indiceHijo - 1];
+        if(hermIzq->numClaves > minClaves){
+
+            // Se hace espacio en el hijo desplazando sus claves una posicion a la derecha
+            for(int j = hijo->numClaves; j > 0; --j){
+                hijo->claves[j] = hijo->claves[j - 1];
+            }
+
+            // Si no es hoja, tambien se desplazan los hijos a la derecha
+            if(!hijo->esHoja){
+                for(int j = hijo->numClaves + 1; j > 0; --j){
+                    hijo->hijos[j] = hijo->hijos[j - 1];
+                }
+            }
+
+            // La clave separadora del padre baja al inicio del hijo
+            hijo->claves[0] = padre->claves[indiceHijo - 1];
+
+            // El ultimo hijo del hermano izquierdo pasa a ser el primer hijo del hijo
+            if(!hijo->esHoja){
+                hijo->hijos[0] = hermIzq->hijos[hermIzq->numClaves];
+            }
+
+            // La ultima clave del hermano izquierdo sube al padre
+            padre->claves[indiceHijo - 1] = hermIzq->claves[hermIzq->numClaves - 1];
+            --hermIzq->numClaves;
+            ++hijo->numClaves;
+            return;
+        }
+    }
+
+    // Intento 2: prestamo del hermano derecho
+    // Si el hermano derecho tiene mas claves de las minimas, se le puede pedir prestada una
+    if(indiceHijo < padre->numClaves){
+        Nodo *hermDer = padre->hijos[indiceHijo + 1];
+        if(hermDer->numClaves > minClaves){
+
+            // La clave separadora del padre baja al final del hijo
+            hijo->claves[hijo->numClaves] = padre->claves[indiceHijo];
+
+            // El primer hijo del hermano derecho pasa a ser el ultimo hijo del hijo
+            if(!hijo->esHoja){
+                hijo->hijos[hijo->numClaves + 1] = hermDer->hijos[0];
+            }
+            ++hijo->numClaves;
+
+            // La primera clave del hermano derecho sube al padre
+            padre->claves[indiceHijo] = hermDer->claves[0];
+
+            // Se desplazan las claves del hermano derecho una posicion a la izquierda
+            for(int j = 0; j < hermDer->numClaves - 1; ++j){
+                hermDer->claves[j] = hermDer->claves[j + 1];
+            }
+
+            // Si no es hoja, tambien se desplazan los hijos a la izquierda
+            if(!hermDer->esHoja){
+                for(int j = 0; j < hermDer->numClaves; ++j){
+                    hermDer->hijos[j] = hermDer->hijos[j + 1];
+                }
+            }
+            --hermDer->numClaves;
+            return;
+        }
+    }
+
+    // Caso 3: fusion
+    // Ningun hermano puede prestar, entonces se fusionan el hijo con su hermano izquierdo
+    // (o derecho si no hay izquierdo), bajando la clave separadora del padre al nodo fusionado
+    int fusIzq = (indiceHijo > 0) ? indiceHijo - 1 : indiceHijo;
+    Nodo *izq  = padre->hijos[fusIzq];
+    Nodo *der  = padre->hijos[fusIzq + 1];
+
+    // La clave separadora del padre baja al nodo izquierdo
+    izq->claves[izq->numClaves] = padre->claves[fusIzq];
+    ++izq->numClaves;
+
+    // Se copian todas las claves del nodo derecho al izquierdo
+    for(int j = 0; j < der->numClaves; ++j){
+        izq->claves[izq->numClaves + j] = der->claves[j];
+    }
+
+    // Si no es hoja, se copian tambien los hijos del derecho al izquierdo
+    if(!der->esHoja){
+        int base = izq->numClaves;
+        for(int j = 0; j <= der->numClaves; ++j){
+            izq->hijos[base + j] = der->hijos[j];
+            der->hijos[j] = nullptr; // higiene antes de liberar el nodo derecho
+        }
+    }
+    izq->numClaves += der->numClaves;
+
+    // Se elimina la clave separadora del padre y el puntero al nodo derecho
+    for(int j = fusIzq; j < padre->numClaves - 1; ++j){
+        padre->claves[j]    = padre->claves[j + 1];
+        padre->hijos[j + 1] = padre->hijos[j + 2];
+    }
+    padre->hijos[padre->numClaves] = nullptr;
+    --padre->numClaves;
+
+    // Se libera el nodo derecho, sus claves e hijos ya fueron transferidos al izquierdo
+    delete der;
 }
 
 template<typename T, int Mgrado>
