@@ -227,7 +227,7 @@ void ArbolB<T, Mgrado>::Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo 
         }
     }
 
-    // Si tras insertar esa nueva clave/nodo se excedio, entonces se debe de dividir y reportamos al padre.
+    // Si tras agregar esa nueva clave/nodo se excedio, entonces se debe de dividir y se le reporta al padre (cuando termina la función)
     if(subRaiz->numClaves == Mgrado){
         DividirNodo(subRaiz, clavePromovida, hijoNuevo);
         huboDivision = true;
@@ -241,42 +241,44 @@ void ArbolB<T, Mgrado>::Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo 
 template<typename T, int Mgrado>
 void ArbolB<T, Mgrado>::DividirNodo(Nodo *nodoLleno, T &clavePromovida, Nodo *&hijoNuevo)
 {
-    // El nodo tiene Mgrado claves: [0, 1, ..., Mgrado-1].
-    // Indice de la clave del medio (la que sube al padre).
-    int med = Mgrado / 2;
+    // El nodo ahora mismo tiene Mgrado claves: [0, 1, ..., Mgrado-1] (paso el limite permitido)
 
-    // Crear el nuevo hermano derecho.
+    int med = Mgrado / 2; // Indice de la clave del medio (la que sube al padre)
+
+    // Se crea el nuevo hermano derecho
     Nodo *nuevoDer;
     try{
         nuevoDer = new Nodo();
     }catch(const std::bad_alloc&){
         throw ArbolNoMemoria();
     }
+
     nuevoDer->esHoja = nodoLleno->esHoja;
 
-    // Copiar las claves [med+1, Mgrado-1] al nuevo nodo.
+    // Se copian las claves [med+1, Mgrado-1] al nuevo nodo
     int claveDest = 0;
+
     for(int i = med + 1; i < Mgrado; ++i){
         nuevoDer->claves[claveDest] = nodoLleno->claves[i];
         ++claveDest;
     }
     nuevoDer->numClaves = claveDest;
 
-    // Si no es hoja, copiar tambien los hijos [med+1, Mgrado] al nuevo nodo.
+    // Si no es hoja, se copia tambien los hijos [med+1, Mgrado] al nuevo nodo
     if(!nodoLleno->esHoja){
+
         int hijoDest = 0;
+
         for(int i = med + 1; i <= Mgrado; ++i){
             nuevoDer->hijos[hijoDest] = nodoLleno->hijos[i];
-            nodoLleno->hijos[i] = nullptr; // higiene: lo dejamos en nullptr
+            nodoLleno->hijos[i] = nullptr; // Los punteros del nodo izquiero (el que antes estaba lleno) ahora serán nulos
             ++hijoDest;
         }
     }
 
-    // La clave del medio es la que sube al padre.
-    clavePromovida = nodoLleno->claves[med];
+    clavePromovida = nodoLleno->claves[med]; // La clave del medio es la que sube al padre.
 
-    // El nodo viejo se queda con las claves [0, med-1].
-    nodoLleno->numClaves = med;
+    nodoLleno->numClaves = med; // El nodo de la izquierda se queda con las claves [0, med-1].
 
     // Devolvemos el nuevo nodo derecho por referencia.
     hijoNuevo = nuevoDer;
@@ -290,17 +292,16 @@ bool ArbolB<T, Mgrado>::Buscar(T valor, Nodo *subRaiz) const
 {
     if(subRaiz == nullptr) return false;
 
-    // Recorremos las claves del nodo de izquierda a derecha hasta encontrar
-    // la primera que sea >= al valor buscado.
+    // Se recorre el arreglo de claves hasta encontrar la primera que sea >= al valor buscado.
     int i = 0;
     while(i < subRaiz->numClaves && subRaiz->claves[i] < valor){
         ++i;
     }
 
-    // Si nos detuvimos en una clave igual al valor, lo encontramos.
+    // Si se detuvo una clave igual al valor, se encontro wiiiii :D
     if(i < subRaiz->numClaves && subRaiz->claves[i] == valor) return true;
 
-    // Si no, bajamos al hijo correspondiente. Si es hoja, no hay donde seguir.
+    // Si no, se baja al hijo correspondiente PERO Si es hoja, entonces no hay donde seguir pipipi
     if(subRaiz->esHoja) return false;
 
     return Buscar(valor, subRaiz->hijos[i]);
@@ -313,7 +314,7 @@ void ArbolB<T, Mgrado>::Podar(Nodo *subRaiz)
 {
     if(subRaiz == nullptr) return;
 
-    // Postorden: primero podamos cada hijo, luego liberamos este nodo.
+    // Postorden: primero se poda cada hijo, luego se libera ese nodo.
     if(!subRaiz->esHoja){
         for(int i = 0; i <= subRaiz->numClaves; ++i){
             Podar(subRaiz->hijos[i]);
@@ -330,8 +331,8 @@ int ArbolB<T, Mgrado>::ObtenerAltura(Nodo *subRaiz) const
 {
     if(subRaiz == nullptr) return 0;
     if(subRaiz->esHoja) return 1;
-    // En un arbol B todas las hojas estan al mismo nivel, asi que basta con
-    // bajar por una rama cualquiera (la del primer hijo).
+
+    // Como todas las hojas estan en el mismo nivel, pues se baja desde el primer hijo
     return 1 + ObtenerAltura(subRaiz->hijos[0]);
 }
 

@@ -34,6 +34,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Aleatorio.cpp" />
+		<Unit filename="Aleatorio.hpp" />
 		<Unit filename="ArbolB.hpp" />
 		<Unit filename="ArbolB.tpp" />
 		<Unit filename="Cola.hpp" />
