@@ -1,9 +1,16 @@
 #include <iostream>
+#include <ctime>
+
 #include "ArbolB.hpp"
 #include "Menu.hpp"
+
 using namespace std;
 
-int main() {
+int main()
+{
+
+    srand(time(NULL));
+
     try {
         // Creamos un Arbol B de grado 5 (Max 4 claves por nodo, minimo 2)
         ArbolB<int, 5> arbol;
@@ -13,7 +20,6 @@ int main() {
         cout << "=======================================" << endl << endl;
 
         cout << "1. Llenando el Arbol con numeros aleatorios..." << endl;
-
 
         defDatosAleatorios(arbol, 30);
 
@@ -35,6 +41,7 @@ int main() {
         cerr << "\nError atrapado: " << e.what() << endl;
     }
 
-    cout << "\n--- Pruebas de insercion finalizadas ---" << endl;
+    cout << "\nSe acavoid" << endl;
+    system("pause");
     return 0;
 }

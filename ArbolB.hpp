@@ -54,7 +54,7 @@ public:
     ArbolB& operator=(const ArbolB& arbol);
 
     // Metodos publicos
-    bool Agregar(T valor);
+    void Agregar(T valor);
     bool Eliminar(T valor);
     bool Buscar(T valor) const;
 
@@ -106,7 +106,7 @@ private:
     // si hubo division, regresa por referencia la clave promovida y el nuevo nodo derecho.
     // El llamador (el padre) decide si tambien
     // se desborda o no.
-    bool Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo *&hijoNuevo, bool &huboDivision);
+    void Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo *&hijoNuevo, bool &huboDivision);
 
     // Eliminar tambien va hacia arriba: tras borrar en una hoja o reemplazar en
     // un nodo interno, si el hijo quedo con underflow, el padre lo repara

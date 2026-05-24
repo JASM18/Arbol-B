@@ -7,7 +7,8 @@
 template<typename T, int Mgrado>
 ArbolB<T, Mgrado>::ArbolB() : numClaves(0), raiz(nullptr)
 {
-
+    // numclaves = 0;
+    // raiz = nullptr;
 }
 
 //***********************************************
@@ -23,6 +24,8 @@ ArbolB<T, Mgrado>::~ArbolB()
 template<typename T, int Mgrado>
 ArbolB<T, Mgrado>::ArbolB(const ArbolB &arbol) : numClaves(0), raiz(nullptr)
 {
+    // numClaves = 0;
+    // raiz = nullptr;
     *this = arbol;
 }
 
@@ -45,7 +48,7 @@ ArbolB<T, Mgrado> & ArbolB<T, Mgrado>::operator=(const ArbolB &arbol)
 template<typename T, int Mgrado>
 ArbolB<T, Mgrado>::Nodo::Nodo() : numClaves(0), esHoja(true), claves(nullptr), hijos(nullptr)
 {
-    // Pedimos espacio para un extra: Mgrado claves y Mgrado+1 hijos,
+    // Espacio extra para los arreglos: Mgrado claves y Mgrado+1 hijos
     // El maximo permitido es Mgrado-1 y Mgrado, pero se le pone un espacio extra para poder insertar primero y dividir despues
     try{
         claves = new T[Mgrado];
@@ -56,7 +59,7 @@ ArbolB<T, Mgrado>::Nodo::Nodo() : numClaves(0), esHoja(true), claves(nullptr), h
         throw ArbolNoMemoria();
     }
 
-    // Inicializamos todos los punteros a hijos en nullptr.
+    // Se inicializa todos los punteros de los hijos a nullptr
     for(int i = 0; i <= Mgrado; ++i){
         hijos[i] = nullptr;
     }
@@ -67,7 +70,6 @@ ArbolB<T, Mgrado>::Nodo::Nodo() : numClaves(0), esHoja(true), claves(nullptr), h
 template<typename T, int Mgrado>
 ArbolB<T, Mgrado>::Nodo::~Nodo()
 {
-    // Solo liberamos los arreglos. La destruccion recursiva la hace Podar
     delete[] claves;
     delete[] hijos;
 }
@@ -77,40 +79,41 @@ ArbolB<T, Mgrado>::Nodo::~Nodo()
 //***********************************************
 
 template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Agregar(T valor)
+void ArbolB<T, Mgrado>::Agregar(T valor)
 {
-    // Si el arbol esta vacio: se crea la raiz con esta unica clave
+    // Si el arbol esta vacio, entonces se crea la raíz con ese unico valor
     if(raiz == nullptr){
-
         try{
             raiz = new Nodo();
-
         }catch(const std::bad_alloc&){
             throw ArbolNoMemoria();
         }
-
         raiz->claves[0] = valor;
-        raiz->numClaves = 1; // la raíz tiene 1 clave
-        ++numClaves; // se le suma +1 clave del contador global del arbol
-        return true;
+        raiz->numClaves = 1;
+        ++numClaves;
+        return;
     }
 
-    // Si el arbol no esta vacio, entonces se inserta recursivamente
-    T clavePromovida; //k_med
-    Nodo *hijoNuevo = nullptr; // hijo derecho resultado de la división del nodo (si es que hubo claro)
+    // Como el arbol no esta vacio, entonces se inserta recursivamente
+    T clavePromovida; // Elemento de en medio que se le dará al padre en caso de si hubo division
+    Nodo *hijoNuevo = nullptr; // Hijo derecho resultande por la división (si es que la hay)
     bool huboDivision = false;
 
-    bool seAgrego = Agregar(valor, raiz, clavePromovida, hijoNuevo, huboDivision);
+    Agregar(valor, raiz, clavePromovida, hijoNuevo, huboDivision);
 
-    // Si la raiz se dividio durante la recursion, se crea una nueva raiz.
-    // Nota: ssta es la unica forma en que un arbol B crece en altura
+    // Si la raiz se dividio durante la recursion, entonces se necesita crear una nueva raiz
+    // NOTA: Esta es la unica forma en que un arbol B crece en altura
     if(huboDivision){
+
         Nodo *nuevaRaiz;
+
         try{
             nuevaRaiz = new Nodo();
         }catch(const std::bad_alloc&){
             throw ArbolNoMemoria();
         }
+
+        // Conexión manual
         nuevaRaiz->esHoja = false;
         nuevaRaiz->numClaves = 1;
         nuevaRaiz->claves[0] = clavePromovida;
@@ -119,9 +122,11 @@ bool ArbolB<T, Mgrado>::Agregar(T valor)
         raiz = nuevaRaiz;
     }
 
-    if(seAgrego) ++numClaves;
-    return seAgrego;
+    ++numClaves;
 }
+//***********************************************
+
+// Aquí va Eliminar() (el prototipo de Eliminar() esta abajo del codigo)
 
 //***********************************************
 
@@ -178,62 +183,57 @@ void ArbolB<T, Mgrado>::Vaciar()
 //***********************************************
 
 template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo *&hijoNuevo, bool &huboDivision)
+void ArbolB<T, Mgrado>::Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo *&hijoNuevo, bool &huboDivision)
 {
-    // 1) Encontrar la posicion donde iria el valor (o donde ya esta).
+    // Primero hay que encontrar la posicion donde iria el valor
+    // Se usa '<=' para que las claves iguales se acumulen a la derecha (la profe dijo que los duplicados se permiten)
     int i = 0;
-    while(i < subRaiz->numClaves && subRaiz->claves[i] < valor){
+
+    while(i < subRaiz->numClaves && subRaiz->claves[i] <= valor){
         ++i;
     }
 
-    // 2) Si la clave ya existe en este nodo, no se agrega.
-    if(i < subRaiz->numClaves && subRaiz->claves[i] == valor){
-        huboDivision = false;
-        return false;
-    }
-
-    // 3) Decision: bajar al hijo o insertar aqui mismo.
-    bool seAgrego;
+    //  Si estamos en una hoja, se intenta insertar ahí mero, de lo contrario se baja al hijo de forma recursiva hasta que sea hoja
     if(subRaiz->esHoja){
-        // Insertamos la clave en posicion i, corriendo las demas a la derecha.
-        for(int j = subRaiz->numClaves; j > i; --j){
-            subRaiz->claves[j] = subRaiz->claves[j - 1];
+
+        // Se inserta la clave en posicion i, corriendo las demas a la derecha.
+        for(int j = subRaiz->numClaves ; j > i ; --j){
+            subRaiz->claves[j] = subRaiz->claves[j - 1]; // se mueven los elementos +1 pocisión
         }
+
         subRaiz->claves[i] = valor;
         ++subRaiz->numClaves;
-        seAgrego = true;
 
     }else{
-        // Bajamos al hijo i. Si esa recursion provoca una division, hay que
-        // absorber aqui la clave promovida y el nuevo hijo.
+
+        // Aquí se controla la división, se baja al hijo 'i' cuando se llama a Agregar(...->hijos[i]), si hubo división, entonces aquí es donde el padre debe de tomar la clave promovida por el hijo
+
         T clavePromHijo;
         Nodo *hijoNuevoSub = nullptr;
         bool huboDivisionSub = false;
 
-        seAgrego = Agregar(valor, subRaiz->hijos[i], clavePromHijo, hijoNuevoSub, huboDivisionSub);
+        Agregar(valor, subRaiz->hijos[i], clavePromHijo, hijoNuevoSub, huboDivisionSub);
 
         if(huboDivisionSub){
-            // Insertamos clavePromHijo en posicion i y hijoNuevoSub en posicion i+1.
+            // Se agrega clavePromHijo en posicion 'i' y hijoNuevoSub en posicion i+1
             for(int j = subRaiz->numClaves; j > i; --j){
                 subRaiz->claves[j] = subRaiz->claves[j - 1];
                 subRaiz->hijos[j + 1] = subRaiz->hijos[j];
             }
+
             subRaiz->claves[i] = clavePromHijo;
             subRaiz->hijos[i + 1] = hijoNuevoSub;
             ++subRaiz->numClaves;
         }
     }
 
-    // 4) Si tras insertar este nodo se desbordo (Mgrado claves), lo dividimos
-    //    y reportamos al padre.
+    // Si tras insertar esa nueva clave/nodo se excedio, entonces se debe de dividir y reportamos al padre.
     if(subRaiz->numClaves == Mgrado){
         DividirNodo(subRaiz, clavePromovida, hijoNuevo);
         huboDivision = true;
     }else{
         huboDivision = false;
     }
-
-    return seAgrego;
 }
 
 //***********************************************
@@ -281,6 +281,7 @@ void ArbolB<T, Mgrado>::DividirNodo(Nodo *nodoLleno, T &clavePromovida, Nodo *&h
     // Devolvemos el nuevo nodo derecho por referencia.
     hijoNuevo = nuevoDer;
 }
+
 
 //***********************************************
 

@@ -9,8 +9,6 @@
  *  El rango se calcula automaticamente como [1, numDatos * 10].
  *  Si Agregar() retorna false (duplicado), el valor se omite y se reporta.
  *
- * @tparam T       Tipo de dato del arbol.
- * @tparam Mgrado  Grado del arbol B.
  * @param arbolito Referencia al arbol que se va a llenar.
  * @param numDatos Cantidad de inserciones a intentar.
  */
