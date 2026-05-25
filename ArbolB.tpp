@@ -1,28 +1,65 @@
 #include "Cola.hpp"
 
 //***********************************************
-// CONSTRUCTORES DEL ARBOL
+// CONSTRUCTOR DE NODO
 //***********************************************
 
-template<typename T, int Mgrado>
-ArbolB<T, Mgrado>::ArbolB() : numClaves(0), raiz(nullptr)
+template<typename T>
+ArbolB<T>::Nodo::Nodo(int grado) : numClaves(0), esHoja(true), claves(nullptr), hijos(nullptr)
 {
-    // numclaves = 0;
-    // raiz = nullptr;
+    // Espacio extra para los arreglos: Mgrado claves y Mgrado+1 hijos
+    // El maximo permitido es Mgrado-1 y Mgrado, pero se le pone un espacio extra para poder insertar primero y dividir despues
+    try{
+        claves = new T[grado];
+        hijos = new Nodo*[grado + 1];
+
+    }catch(const std::bad_alloc&){
+        delete[] claves; // por si claves se asigno y hijos fallo
+        throw ArbolNoMemoria();
+    }
+
+    // Se inicializa todos los punteros de los hijos a nullptr
+    for(int i = 0; i <= grado; ++i){
+        hijos[i] = nullptr;
+    }
 }
 
 //***********************************************
 
-template<typename T, int Mgrado>
-ArbolB<T, Mgrado>::~ArbolB()
+template<typename T>
+ArbolB<T>::Nodo::~Nodo()
+{
+    delete[] claves;
+    delete[] hijos;
+}
+
+//***********************************************
+// CONSTRUCTORES DEL ARBOL
+//***********************************************
+
+template<typename T>
+ArbolB<T>::ArbolB(int M) : numClaves(0), raiz(nullptr), Mgrado(M)
+{
+    // numclaves = 0;
+    // raiz = nullptr;
+    // Mgrado = M;
+    if(Mgrado < 3){
+        throw ArbolGrado();
+    }
+}
+
+//***********************************************
+
+template<typename T>
+ArbolB<T>::~ArbolB()
 {
     Vaciar();
 }
 
 //***********************************************
 
-template<typename T, int Mgrado>
-ArbolB<T, Mgrado>::ArbolB(const ArbolB &arbol) : numClaves(0), raiz(nullptr)
+template<typename T>
+ArbolB<T>::ArbolB(const ArbolB &arbol) : numClaves(0), raiz(nullptr)
 {
     // numClaves = 0;
     // raiz = nullptr;
@@ -31,8 +68,8 @@ ArbolB<T, Mgrado>::ArbolB(const ArbolB &arbol) : numClaves(0), raiz(nullptr)
 
 //***********************************************
 
-template<typename T, int Mgrado>
-ArbolB<T, Mgrado> & ArbolB<T, Mgrado>::operator=(const ArbolB &arbol)
+template<typename T>
+ArbolB<T> & ArbolB<T>::operator=(const ArbolB &arbol)
 {
     if(this == &arbol) return *this;
     Vaciar();
@@ -42,49 +79,16 @@ ArbolB<T, Mgrado> & ArbolB<T, Mgrado>::operator=(const ArbolB &arbol)
 }
 
 //***********************************************
-// CONSTRUCTOR DE NODO
-//***********************************************
-
-template<typename T, int Mgrado>
-ArbolB<T, Mgrado>::Nodo::Nodo() : numClaves(0), esHoja(true), claves(nullptr), hijos(nullptr)
-{
-    // Espacio extra para los arreglos: Mgrado claves y Mgrado+1 hijos
-    // El maximo permitido es Mgrado-1 y Mgrado, pero se le pone un espacio extra para poder insertar primero y dividir despues
-    try{
-        claves = new T[Mgrado];
-        hijos = new Nodo*[Mgrado + 1];
-
-    }catch(const std::bad_alloc&){
-        delete[] claves; // por si claves se asigno y hijos fallo
-        throw ArbolNoMemoria();
-    }
-
-    // Se inicializa todos los punteros de los hijos a nullptr
-    for(int i = 0; i <= Mgrado; ++i){
-        hijos[i] = nullptr;
-    }
-}
-
-//***********************************************
-
-template<typename T, int Mgrado>
-ArbolB<T, Mgrado>::Nodo::~Nodo()
-{
-    delete[] claves;
-    delete[] hijos;
-}
-
-//***********************************************
 // METODOS PUBLICOS
 //***********************************************
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::Agregar(T valor)
+template<typename T>
+void ArbolB<T>::Agregar(T valor)
 {
     // Si el arbol esta vacio, entonces se crea la raíz con ese unico valor
     if(raiz == nullptr){
         try{
-            raiz = new Nodo();
+            raiz = new Nodo(Mgrado);
         }catch(const std::bad_alloc&){
             throw ArbolNoMemoria();
         }
@@ -108,7 +112,7 @@ void ArbolB<T, Mgrado>::Agregar(T valor)
         Nodo *nuevaRaiz;
 
         try{
-            nuevaRaiz = new Nodo();
+            nuevaRaiz = new Nodo(Mgrado);
         }catch(const std::bad_alloc&){
             throw ArbolNoMemoria();
         }
@@ -126,8 +130,8 @@ void ArbolB<T, Mgrado>::Agregar(T valor)
 }
 //***********************************************
 
-template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Eliminar(T valor)
+template<typename T>
+bool ArbolB<T>::Eliminar(T valor)
 {
     if(raiz == nullptr) return false;
 
@@ -156,56 +160,66 @@ bool ArbolB<T, Mgrado>::Eliminar(T valor)
 
 //***********************************************
 
-template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Buscar(T valor) const
+template<typename T>
+bool ArbolB<T>::Buscar(T valor) const
 {
     return Buscar(valor, raiz);
 }
 
 //***********************************************
 
-template<typename T, int Mgrado>
-int ArbolB<T, Mgrado>::ObtenerNumClaves() const
+template<typename T>
+int ArbolB<T>::ObtenerNumClaves() const
 {
     return numClaves;
 }
 
 //***********************************************
 
-template<typename T, int Mgrado>
-int ArbolB<T, Mgrado>::ObtenerAltura() const
+template<typename T>
+int ArbolB<T>::ObtenerAltura() const
 {
     return ObtenerAltura(raiz);
 }
 
 //***********************************************
 
-template<typename T, int Mgrado>
-int ArbolB<T,Mgrado>::ObtenerGrado() const
+template<typename T>
+int ArbolB<T>::ObtenerGrado() const
 {
     return Mgrado;
 }
 
 //***********************************************
 
-template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::EstaVacia() const
+template<typename T>
+bool ArbolB<T>::EstaVacia() const
 {
     return numClaves == 0;
 }
 
 //***********************************************
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::Vaciar()
+template<typename T>
+void ArbolB<T>::Vaciar()
 {
     Podar(raiz);
     raiz = nullptr;
     numClaves = 0;
 }
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::ImprimirPorNiveles() const
+//***********************************************
+
+template<typename T>
+void ArbolB<T>::ImprimirOrden() const
+{
+
+}
+
+//***********************************************
+
+template<typename T>
+void ArbolB<T>::ImprimirPorNiveles() const
 {
     if(EstaVacia()) return;
 
@@ -247,8 +261,8 @@ void ArbolB<T, Mgrado>::ImprimirPorNiveles() const
 
 //***********************************************
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::ImprimirComoArbol() const
+template<typename T>
+void ArbolB<T>::ImprimirComoArbol() const
 {
     if(EstaVacia()) return;
     std::cout << std::endl;
@@ -260,8 +274,8 @@ void ArbolB<T, Mgrado>::ImprimirComoArbol() const
 // METODOS PRIVADOS
 //***********************************************
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo *&hijoNuevo, bool &huboDivision)
+template<typename T>
+void ArbolB<T>::Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo *&hijoNuevo, bool &huboDivision)
 {
     // Primero hay que encontrar la posicion donde iria el valor
     // Se usa '<=' para que las claves iguales se acumulen a la derecha (la profe dijo que los duplicados se permiten)
@@ -316,8 +330,8 @@ void ArbolB<T, Mgrado>::Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo 
 
 //***********************************************
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::DividirNodo(Nodo *nodoLleno, T &clavePromovida, Nodo *&hijoNuevo)
+template<typename T>
+void ArbolB<T>::DividirNodo(Nodo *nodoLleno, T &clavePromovida, Nodo *&hijoNuevo)
 {
     // El nodo ahora mismo tiene Mgrado claves: [0, 1, ..., Mgrado-1] (paso el limite permitido)
 
@@ -326,7 +340,7 @@ void ArbolB<T, Mgrado>::DividirNodo(Nodo *nodoLleno, T &clavePromovida, Nodo *&h
     // Se crea el nuevo hermano derecho
     Nodo *nuevoDer;
     try{
-        nuevoDer = new Nodo();
+        nuevoDer = new Nodo(Mgrado);
     }catch(const std::bad_alloc&){
         throw ArbolNoMemoria();
     }
@@ -364,8 +378,8 @@ void ArbolB<T, Mgrado>::DividirNodo(Nodo *nodoLleno, T &clavePromovida, Nodo *&h
 
 //***********************************************
 
-template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Eliminar(T valor, Nodo *subRaiz)
+template<typename T>
+bool ArbolB<T>::Eliminar(T valor, Nodo *subRaiz)
 {
     const int minClaves = (Mgrado + 1) / 2 - 1;
 
@@ -416,8 +430,8 @@ bool ArbolB<T, Mgrado>::Eliminar(T valor, Nodo *subRaiz)
 
 //***********************************************
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::RepararHijo(Nodo *padre, int indiceHijo)
+template<typename T>
+void ArbolB<T>::RepararHijo(Nodo *padre, int indiceHijo)
 {
     const int minClaves = (Mgrado + 1) / 2 - 1;
     Nodo *hijo = padre->hijos[indiceHijo];
@@ -530,8 +544,8 @@ void ArbolB<T, Mgrado>::RepararHijo(Nodo *padre, int indiceHijo)
 
 //***********************************************
 
-template<typename T, int Mgrado>
-int ArbolB<T, Mgrado>::ObtenerAltura(Nodo *subRaiz) const
+template<typename T>
+int ArbolB<T>::ObtenerAltura(Nodo *subRaiz) const
 {
     if(subRaiz == nullptr) return 0;
     if(subRaiz->esHoja) return 1;
@@ -542,8 +556,8 @@ int ArbolB<T, Mgrado>::ObtenerAltura(Nodo *subRaiz) const
 
 //***********************************************
 
-template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Buscar(T valor, Nodo *subRaiz) const
+template<typename T>
+bool ArbolB<T>::Buscar(T valor, Nodo *subRaiz) const
 {
     if(subRaiz == nullptr) return false;
 
@@ -564,8 +578,8 @@ bool ArbolB<T, Mgrado>::Buscar(T valor, Nodo *subRaiz) const
 
 //***********************************************
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::Podar(Nodo *subRaiz)
+template<typename T>
+void ArbolB<T>::Podar(Nodo *subRaiz)
 {
     if(subRaiz == nullptr) return;
 
@@ -579,8 +593,8 @@ void ArbolB<T, Mgrado>::Podar(Nodo *subRaiz)
     delete subRaiz;
 }
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::CopiarEstructura(const ArbolB &arbolOrigen)
+template<typename T>
+void ArbolB<T>::CopiarEstructura(const ArbolB &arbolOrigen)
 {
     // Para que la copia tenga *exactamente* la misma estructura que el origen
     // (misma raiz, mismos hijos, mismas claves en las mismas posiciones),
@@ -596,8 +610,8 @@ void ArbolB<T, Mgrado>::CopiarEstructura(const ArbolB &arbolOrigen)
 
 //***********************************************
 
-template<typename T, int Mgrado>
-typename ArbolB<T, Mgrado>::Nodo *ArbolB<T, Mgrado>::ClonarNodo(Nodo *nodoOrigen)
+template<typename T>
+typename ArbolB<T>::Nodo *ArbolB<T>::ClonarNodo(Nodo *nodoOrigen)
 {
     if(nodoOrigen == nullptr) return nullptr;
 
@@ -627,8 +641,8 @@ typename ArbolB<T, Mgrado>::Nodo *ArbolB<T, Mgrado>::ClonarNodo(Nodo *nodoOrigen
 
 //***********************************************
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::ImprimirComoArbol(Nodo *subRaiz, int nivel) const
+template<typename T>
+void ArbolB<T>::ImprimirComoArbol(Nodo *subRaiz, int nivel) const
 {
     if(subRaiz == nullptr) return;
 
@@ -660,23 +674,36 @@ void ArbolB<T, Mgrado>::ImprimirComoArbol(Nodo *subRaiz, int nivel) const
 // EXCEPCIONES
 //***********************************************
 
-template<typename T, int Mgrado>
-ArbolB<T, Mgrado>::ArbolNoMemoria::ArbolNoMemoria() throw() {}
+template<typename T>
+ArbolB<T>::ArbolNoMemoria::ArbolNoMemoria() throw() {}
 
 //***********************************************
 
-template<typename T, int Mgrado>
-const char *ArbolB<T, Mgrado>::ArbolNoMemoria::what() const throw()
+template<typename T>
+const char *ArbolB<T>::ArbolNoMemoria::what() const throw()
 {
     return "No hay memoria disponible.";
+}
+
+//***********************************************
+
+template<typename T>
+ArbolB<T>::ArbolGrado::ArbolGrado() throw() {}
+
+//***********************************************
+
+template<typename T>
+const char *ArbolB<T>::ArbolGrado::what() const throw()
+{
+    return "Grado no valido, tiene que ser mayor o igual a 3.";
 }
 
 //***********************************************
 // Flujos sobrecargados de entrada y salida
 //***********************************************
 
-template<typename T, int Mgrado>
-std::ostream& operator<<(std::ostream& salida, const ArbolB<T, Mgrado>& arbol)
+template<typename T>
+std::ostream& operator<<(std::ostream& salida, const ArbolB<T>& arbol)
 {
     arbol.ImprimirComoArbol();
     return salida;

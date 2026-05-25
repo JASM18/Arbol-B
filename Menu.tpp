@@ -1,7 +1,7 @@
 #include "Aleatorio.hpp"
 
 template <typename T, int Mgrado>
-void defDatosAleatorios(ArbolB<T, Mgrado>& arbolito, int numDatos)
+void defDatosAleatorios(ArbolB<T>& arbolito, int numDatos)
 {
     int inicio = 1;
     int fin = 100;

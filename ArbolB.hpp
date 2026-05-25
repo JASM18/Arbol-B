@@ -36,19 +36,19 @@
 
 //***********************************************
 
-template<typename T, int Mgrado> class ArbolB;
-template<typename T, int Mgrado>
-std::ostream& operator<<(std::ostream& salida, const ArbolB<T, Mgrado>& arbol);
+template<typename T> class ArbolB;
+template<typename T>
+std::ostream& operator<<(std::ostream& salida, const ArbolB<T>& arbol);
 
 //***********************************************
 
-template <typename T, int Mgrado>
+template <typename T>
 class ArbolB {
-    friend std::ostream& operator<< <>(std::ostream& salida, const ArbolB<T, Mgrado>& arbol);
+    friend std::ostream& operator<< <>(std::ostream& salida, const ArbolB<T>& arbol);
 public:
 
     // Constructores
-    ArbolB();
+    ArbolB(int M);
     ~ArbolB();
     ArbolB(const ArbolB& arbol);
     ArbolB& operator=(const ArbolB& arbol);
@@ -78,8 +78,17 @@ public:
         virtual const char *what() const throw();
     };
 
-private:
+    /**
+     * \brief Excepcion lanzada cuando se define un grado no valido.
+     */
+    class ArbolGrado : public std::exception {
+    public:
+        ArbolGrado() throw();
+        virtual const char *what() const throw();
+    };
 
+private:
+    int Mgrado;
     int numClaves; // Total de claves en todo el arbol
 
     struct Nodo {
@@ -88,7 +97,7 @@ private:
         T *claves;      // Arreglo dinamico de tamano Mgrado (uno mas que el maximo)
         Nodo **hijos;   // Arreglo dinamico de tamano Mgrado+1 (uno mas que el maximo)
 
-        Nodo();   // Pide memoria para claves y hijos
+        Nodo(int grado);   // Pide memoria para claves y hijos
         ~Nodo();  // Libera la memoria de los arreglos (no destruye recursivamente)
     }*raiz;
 
@@ -116,6 +125,7 @@ private:
     void CopiarEstructura(const ArbolB &arbolOrigen);
     Nodo *ClonarNodo(Nodo *nodoOrigen);
 
+    void ImprimirOrden(Nodo *subRaiz) const;
     void ImprimirComoArbol(Nodo *subRaiz, int nivel) const;
 };
 
