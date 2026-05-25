@@ -1,60 +1,181 @@
 #include <iostream>
-#include <ctime>
 
+#include "CapturaSegura.hpp"
 #include "ArbolB.hpp"
-#include "Menu.hpp"
 
 using namespace std;
 
+/**
+ * \brief Opciones del men&uacute; principal para el mont&iacute;culo.
+ */
+enum Opciones_principales {
+    AGREGAR = 1,        ///< Agrega un nuevo valor al mont&iacute;culo actual.
+    ELIMINAR,           ///< Elimina la ra&iacute;z del mont&iacute;culo actual.
+    BUSCAR,
+    NUMCLAVES,          ///< Muestra el n&uacute;mero de claves en total.
+    ALTURA,
+    GRADO,
+    ESTAVACIA,          ///< Indica si el mont&iacute;culo actual no tiene elementos.
+    VACIAR,             ///< Elimina todos los elementos del mont&iacute;culo actual.
+    IMPRIMIR,           ///< Imprime los elementos en orden.
+    IMPRIMIRNIV,
+    IMPRIMIRARBOL,
+    SALIR               ///< Termina el programa.
+};
+
 int main()
 {
+    int opcion = -1;
+    int gradoUsuario = 0;
 
-    srand(time(NULL));
-
-    try {
-        // Creamos un Arbol B de grado 5 (Max 4 claves por nodo, minimo 2)
-        ArbolB<int, 5> arbol;
-
-        cout << "=======================================" << endl;
-        cout << "      PRUEBAS: ARBOL B (GRADO 5)       " << endl;
-        cout << "=======================================" << endl << endl;
-
-        cout << "1. Llenando el Arbol con n\243meros aleatorios..." << endl;
-
-        defDatosAleatorios(arbol, 30);
-
-        cout << "\n2. Estado del Arbol despues de las inserciones:" << endl;
-        cout << "N\243mero total de claves: " << arbol.ObtenerNumClaves() << endl;
-        cout << "Altura del \240rbol: " << arbol.ObtenerAltura() << endl;
-
-        cout << "\n3. Impresi\242n por niveles (Estructura interna):" << endl;
-        arbol.ImprimirPorNiveles();
-
-        cout << "\n4. Impresi\242n como Arbol (Acostado):" << endl;
-        cout << arbol; // Probando el operator<< sobrecargado
-
-        cout << "\n5. Pruebas de B\243squeda:" << endl;
-        cout << "Buscando el 6: " << (arbol.Buscar(6) ? "Encontrado" : "No encontrado") << endl;
-        cout << "Buscando el 99: " << (arbol.Buscar(99) ? "Encontrado" : "No encontrado") << endl;
+    do{
+        CapturarNumero(opcion, "Grado del nodo: ");
+    }while(gradoUsuario < 3);
 
 
-        cout << "\n6. Pruebas de eliminaci\242n de elementos del \240rbol:" << endl;
-        cout << "Eliminaci\242n del n\243mero 5: " << (arbol.Eliminar(5)? "Se ha eliminado el 5": "No se ha encontrado en el \240rbol")   << endl;
-        cout << "Eliminaci\242n del n\243mero 12: "<< (arbol.Eliminar(12)? "Se ha eliminado el 12": "No se ha encontrado en el \240rbol") << endl;
-        cout << "Eliminaci\242n del n\243mero 67: "<< (arbol.Eliminar(67)? "Se ha eliminado el 67": "No se ha encontrado en el \240rbol") << endl;
+    ArbolB<int, 3> arbolitoB;
 
+    int valor;
 
-        cout << "Imprimiendo de nuevo el \240rbol para visualizar las eliminaciones" << endl;
-        cout << "Impresi\242n por niveles (Estructura interna):" << endl;
-        arbol.ImprimirPorNiveles();
-        cout << "Impresi\242n como Arbol (Acostado):" << endl;
-        cout << arbol;
+    system("pause");
 
+    do{
+        cout << "==================================" << endl;
+        cout << "Tarea 9. Heap (m\241nimo/m\240ximo)" << endl;
+        cout << "==================================" << endl << endl;
 
-    } catch (const exception& e) {
-        cerr << "\nError atrapado: " << e.what() << endl;
-    }
+        cout << "Modo activo: " << (modoMaximo ? "M\265XIMO" : "M\326NIMO") << endl << endl;
 
-    cout << "\nSe acavoid" << endl;
+        cout << "--- MONT\326CULO ACTUAL ---" << endl;
+        if(modoMaximo){
+            if(mtMax.EstaVacia()) cout << "El mont\241culo est\240 vac\241o." << endl;
+            else{ cout << mtMax; cout << endl; }
+        }else{
+            if(mtMin.EstaVacia()) cout << "El mont\241culo est\240 vac\241o." << endl;
+            else{ cout << mtMin; cout << endl; }
+        }
+        cout << "------------------------" << endl << endl;
+
+        cout << "Opciones:" << endl;
+        cout << "\t" << AGREGAR << ") Agregar un valor." << endl;
+        cout << "\t" << ELIMINAR << ") Eliminar la ra\241z." << endl;
+        cout << "\t" << OBTFRENTE << ") Obtener el elemento al frente (la ra\241z)." << endl;
+        cout << "\t" << ESTAVACIA << ") Saber si el mont\241culo est\240 vac\241o." << endl;
+        cout << "\t" << VACIAR << ") Vaciar el mont\241culo." << endl;
+        cout << "\t" << NUMELEM << ") Obtener el n\243mero de elementos." << endl;
+        cout << "\t" << CAPACIDAD << ") Obtener la capacidad del mont\241culo." << endl;
+        cout << "\t" << IMPRIMIR << ") Imprimir." << endl;
+        cout << "\t" << CAMBIAR << ") Cambiar entre mont\241culo m\241nimo y m\240ximo." << endl;
+        cout << "\t" << SALIR << ") Salir del programa." << endl;
+
+        do{
+            CapturarNumero(opcion, "Elige una opci\242n: ");
+        }while(opcion > SALIR || opcion < AGREGAR);
+
+        if(opcion == SALIR) continue;
+
+        try{
+            cout << "- - - - -" << endl;
+            switch(opcion){
+
+                case AGREGAR:
+                    CapturarNumero(valor, "Valor a agregar: ");
+                    if(modoMaximo){
+                        mtMax.Agregar(valor);
+                    }else{
+                        mtMin.Agregar(valor);
+                    }
+                    cout << "Valor agregado correctamente." << endl;
+                break;
+
+                case ELIMINAR:
+                    if(modoMaximo){
+                        mtMax.Eliminar();
+                    }else{
+                        mtMin.Eliminar();
+                    }
+                    cout << "Se elimin\242 la ra\241z del mont\241culo." << endl;
+                break;
+
+                case OBTFRENTE:
+                    if(modoMaximo){
+                        cout << "Elemento al frente: " << mtMax.ObtenerFrente() << endl;
+                    }else{
+                        cout << "Elemento al frente: " << mtMin.ObtenerFrente() << endl;
+                    }
+                break;
+
+                case ESTAVACIA:
+                    if(modoMaximo){
+                        if(mtMax.EstaVacia()){
+                            cout << "El mont\241culo S\326 est\240 vac\241o." << endl;
+                        }else{
+                            cout << "El mont\241culo NO est\240 vac\241o." << endl;
+                        }
+                    }else{
+                        if(mtMin.EstaVacia()){
+                            cout << "El mont\241culo S\326 est\240 vac\241o." << endl;
+                        }else{
+                            cout << "El mont\241culo NO est\240 vac\241o." << endl;
+                        }
+                    }
+                break;
+
+                case VACIAR:
+                    if(modoMaximo){
+                        mtMax.Vaciar();
+                    }else{
+                        mtMin.Vaciar();
+                    }
+                    cout << "El mont\241culo ha sido vaciado por completo." << endl;
+                break;
+
+                case NUMELEM:
+                    if(modoMaximo){
+                        cout << "El mont\241culo tiene " << mtMax.ObtenerNumElementos() << " elementos." << endl;
+                    }else{
+                        cout << "El mont\241culo tiene " << mtMin.ObtenerNumElementos() << " elementos." << endl;
+                    }
+                break;
+
+                case CAPACIDAD:
+                    if(modoMaximo){
+                        cout << "Capacidad actual: " << mtMax.ObtenerCapacidad() << endl;
+                    }else{
+                        cout << "Capacidad actual: " << mtMin.ObtenerCapacidad() << endl;
+                    }
+                break;
+
+                case IMPRIMIR:
+                    if(modoMaximo){
+                        cout << "Elementos: "; mtMax.Imprimir(); cout << endl;
+                    }else{
+                        cout << "Elementos: "; mtMin.Imprimir(); cout << endl;
+                    }
+                break;
+
+                case CAMBIAR:
+                    modoMaximo = !modoMaximo;
+                    cout << "Modo cambiado a: " << (modoMaximo ? "M\265XIMO" : "M\315NIMO") << endl;
+                    cout << "(Cada mont\241culo conserva su propio contenido.)" << endl;
+                break;
+            }
+
+        }catch(const char* mensaje){
+            cerr << "Error: " << mensaje << endl;
+        }catch(const exception &error){
+            cerr << "Error: " << error.what() << endl;
+        }catch(...){
+            cerr << "El programa tuvo un error inesperado." << endl;
+        }
+
+        cout << endl;
+        system ("pause");
+        system("CLS");
+    }while(opcion != SALIR);
+
+    cout << "\nEl programa ha terminado." << endl;
+
+    system("pause");
     return 0;
 }

@@ -65,6 +65,7 @@ public:
     bool EstaVacia() const;
     void Vaciar();
 
+    void ImprimirOrden() const; // Falta
     void ImprimirPorNiveles() const;
     void ImprimirComoArbol() const;
 
