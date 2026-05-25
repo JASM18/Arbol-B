@@ -216,7 +216,7 @@ template<typename T>
 void ArbolB<T>::ImprimirOrden() const
 {
     if(EstaVacia()){
-        std::cout << "[ ]";
+        std::cout << "[ ]" << std::endl;
         return;
     }
 
@@ -231,7 +231,7 @@ template<typename T>
 void ArbolB<T>::ImprimirPorNiveles() const
 {
     if(EstaVacia()){
-        std::cout << "[ ]";
+        std::cout << "[ ]" << std::endl;
         return;
     }
 
@@ -277,7 +277,7 @@ template<typename T>
 void ArbolB<T>::ImprimirComoArbol() const
 {
     if(EstaVacia()){
-        std::cout << "[ ]";
+        std::cout << "[ ]" << std::endl;
         return;
     }
 

@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 #include "CapturaSegura.hpp"
 #include "ArbolB.hpp"
@@ -27,6 +29,8 @@ enum Opciones_principales {
 
 int main()
 {
+    srand((time(NULL)));
+
     int opcion = -1;
     int grado = 3;
 
@@ -44,15 +48,14 @@ int main()
     system("CLS");
 
     ArbolB<int> arbolitoB(grado);
-    int valor;
 
     do{
         cout << "==================================" << endl;
         cout << "Proyecto final: Arbol B" << endl;
         cout << "==================================" << endl << endl;
 
-        cout << "--- ARBOL(" << grado << ") ACTUAL ---" << endl;
-        cout << arbolitoB << endl;
+        cout << "--- Arbol B(M=" << grado << ") actual ---" << endl;
+        cout << arbolitoB;
         cout << "------------------------" << endl << endl;
 
         cout << "Opciones:" << endl;
@@ -64,7 +67,7 @@ int main()
         cout << "\t" << GRADO << ") Obtener el grado del arbol." << endl;
         cout << "\t" << ESTAVACIA << ") Saber si el arbol est\240 vac\241o." << endl;
         cout << "\t" << VACIAR << ") Vaciar elarbol." << endl;
-        cout << "\t" << IMPRIMIR << ") Imprimir (en orden) (NO ESTA LISTA)." << endl;
+        cout << "\t" << IMPRIMIR << ") Imprimir (en orden)." << endl;
         cout << "\t" << IMPRIMIRNIV << ") Imprimir (como arbol)." << endl;
         cout << "\t" << IMPRIMIRARBOL << ") Imprimir (como arbol acostado)." << endl;
         cout << "\t" << DATARANDOM << ") Agregar datos aleatorios." << endl;
@@ -79,68 +82,52 @@ int main()
         try{
             cout << "- - - - -" << endl;
             switch(opcion){
-
                 case AGREGAR:
-                    CapturarNumero(valor, "Valor a agregar: ");
-                    arbolitoB.Agregar(valor);
-                    cout << "Valor agregado correctamente." << endl;
+                    GAgregar(arbolitoB);
                 break;
 
                 case ELIMINAR:
-                    CapturarNumero(valor, "Valor a eliminar: ");
-
-                    if(arbolitoB.Eliminar(valor)){
-                        cout << "Se elimin\242 el valor " << valor << " del arbol." << endl;
-                    }else{
-                        cout << "[:(] El valor " << valor << " no se encontro en el arbol." << endl;
-                    }
-
+                    GEliminar(arbolitoB);
                 break;
 
                 case BUSCAR:
-                    CapturarNumero(valor, "Valor a buscar: ");
-                    cout << "El valor " << valor << (arbolitoB.Buscar(6) ? " SI se encontro." : " NO encontro.") << endl;
+                    GBuscar(arbolitoB);
                 break;
 
                 case NUMCLAVES:
-                    cout << "El arbol tiene " << arbolitoB.ObtenerNumClaves() << " claves en total." << endl;
+                    GNumClaves(arbolitoB);
                 break;
 
                 case ALTURA:
-                    cout << "El arbol tiene altura " << arbolitoB.ObtenerNumClaves() << "." << endl;
+                    GAltura(arbolitoB);
                 break;
 
                 case GRADO:
-                    cout << "El arbol es de grado " << arbolitoB.ObtenerGrado() << "." << endl;
+                    GGrado(arbolitoB);
                 break;
 
                 case ESTAVACIA:
-                    if(arbolitoB.EstaVacia()){
-                        cout << "El arbol S\326 est\240 vac\241o." << endl;
-                    }else{
-                        cout << "El arbol NO est\240 vac\241o." << endl;
-                    }
+                    GEstaVacia(arbolitoB);
                 break;
 
                 case VACIAR:
-                    arbolitoB.Vaciar();
-                    cout << "El arbol ha sido vaciado por completo." << endl;
+                    GVaciar(arbolitoB);
                 break;
 
                 case IMPRIMIR:
-                    arbolitoB.ImprimirOrden();
+                    GImprimirOrden(arbolitoB);
                 break;
 
                 case IMPRIMIRNIV:
-                    arbolitoB.ImprimirPorNiveles();
+                    GImprimirPorNiveles(arbolitoB);
                 break;
 
                 case IMPRIMIRARBOL:
-                    arbolitoB.ImprimirComoArbol();
+                    GImprimirComoArbol(arbolitoB);
                 break;
 
-                case DATARANDOM :
-                    defDatosAleatorios(arbolitoB, 30);
+                case DATARANDOM:
+                    defDatosAleatorios(arbolitoB);
                 break;
             }
 
