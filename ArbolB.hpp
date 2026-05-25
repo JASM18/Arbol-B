@@ -77,15 +77,6 @@ public:
         virtual const char *what() const throw();
     };
 
-    /**
-     * \brief Excepcion lanzada cuando ocurren fallos de memoria dinamica.
-     */
-    class ArbolGrado : public std::exception {
-    public:
-        ArbolGrado() throw();
-        virtual const char *what() const throw();
-    };
-
 private:
 
     int numClaves; // Total de claves en todo el arbol
@@ -100,28 +91,29 @@ private:
         ~Nodo();  // Libera la memoria de los arreglos (no destruye recursivamente)
     }*raiz;
 
-    // Funciones de utileria.
+    // =====================
+    // Funciones de utileria
+    // =====================
 
     // Agregar usa el estilo "hacia arriba": la funcion privada recursiva inserta en la hoja correspondiente;
-    // si hubo division, regresa por referencia la clave promovida y el nuevo nodo derecho.
-    // El llamador (el padre) decide si tambien
-    // se desborda o no.
+    // si hubo division, regresa por referencia la clave promovida y el nuevo nodo derecho
+    // El llamador (el padre) decide si tambien se desborda o no
     void Agregar(T valor, Nodo *subRaiz, T &clavePromovida, Nodo *&hijoNuevo, bool &huboDivision);
+    void DividirNodo(Nodo *nodoLleno, T &clavePromovida, Nodo *&hijoNuevo); // Cuando el nodo este overflow (tiene mas de M hijos)
 
-    // Eliminar tambien va hacia arriba: tras borrar en una hoja o reemplazar en
-    // un nodo interno, si el hijo quedo con underflow, el padre lo repara
-    // (prestamo o fusion) al regresar la recursion.
+    // Eliminar tambien va hacia arriba: tras borrar en una hoja o reemplazar en un nodo interno,
+    // si el hijo quedo con underflow (menos de M/2 hijos), entonces el padre lo repara (prestamo o fusion) al regresar la recursion
     bool Eliminar(T valor, Nodo *subRaiz);
+    void RepararHijo(Nodo *padre, int indiceHijo);   // prestamo o fusion para cuando el nodo este en underflow (menos de M/2 hijos)
+
+    // ===== mas cositas =====
+    int ObtenerAltura(Nodo *subRaiz) const; // Auxiliar para buscar la altura del arbol recursivamente
 
     bool Buscar(T valor, Nodo *subRaiz) const;
-    void Podar(Nodo *subRaiz);
-    void CopiarPorNiveles(const ArbolB &arbolOrigen);
+    void Podar(Nodo *subRaiz); // Auxiliar para vaciar recursivamente
 
-    int ObtenerAltura(Nodo *subRaiz) const;
-
-    // Utileria para la division y la reparacion de underflow.
-    void DividirNodo(Nodo *nodoLleno, T &clavePromovida, Nodo *&hijoNuevo);
-    void RepararHijo(Nodo *padre, int indiceHijo);   // prestamo o fusion
+    void CopiarEstructura(const ArbolB &arbolOrigen);
+    Nodo *ClonarNodo(Nodo *nodoOrigen);
 
     void ImprimirComoArbol(Nodo *subRaiz, int nivel) const;
 };

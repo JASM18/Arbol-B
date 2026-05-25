@@ -37,7 +37,7 @@ ArbolB<T, Mgrado> & ArbolB<T, Mgrado>::operator=(const ArbolB &arbol)
     if(this == &arbol) return *this;
     Vaciar();
 
-    CopiarPorNiveles(arbol);
+    CopiarEstructura(arbol);
     return *this;
 }
 
@@ -126,7 +126,33 @@ void ArbolB<T, Mgrado>::Agregar(T valor)
 }
 //***********************************************
 
-// Aquí va Eliminar() (el prototipo de Eliminar() esta abajo del codigo)
+template<typename T, int Mgrado>
+bool ArbolB<T, Mgrado>::Eliminar(T valor)
+{
+    if(raiz == nullptr) return false;
+
+    bool seElimino = Eliminar(valor, raiz);
+
+    if(seElimino){
+        --numClaves;
+
+        // Si la raiz quedo vacia tras una fusion, la raiz baja un nivel
+        // NOTA: esta es la unica forma en que el arbol decrece su altura
+        if(raiz->numClaves == 0){
+            Nodo *viejaRaiz = raiz;
+
+            if(raiz->esHoja){
+                // El arbol quedo completamente vacio.
+                raiz = nullptr;
+            }else{
+                raiz = raiz->hijos[0];
+                viejaRaiz->hijos[0] = nullptr;
+            }
+            delete viejaRaiz;
+        }
+    }
+    return seElimino;
+}
 
 //***********************************************
 
@@ -177,6 +203,58 @@ void ArbolB<T, Mgrado>::Vaciar()
     raiz = nullptr;
     numClaves = 0;
 }
+
+template<typename T, int Mgrado>
+void ArbolB<T, Mgrado>::ImprimirPorNiveles() const
+{
+    if(EstaVacia()) return;
+
+    Cola<Nodo *> cola;
+    Nodo *aux;
+
+    cola.Agregar(raiz);
+    cola.Agregar(nullptr); // marcador de fin de nivel
+
+    while(!cola.EstaVacia()){
+
+        aux = cola.ObtenerCabeza();
+        cola.Eliminar();
+
+        if(aux != nullptr){
+            // Imprimimos las claves del nodo entre corchetes.
+            std::cout << "[";
+            for(int i = 0; i < aux->numClaves; ++i){
+                std::cout << aux->claves[i];
+                if(i + 1 < aux->numClaves) std::cout << ", ";
+            }
+            std::cout << "] ";
+
+            // Encolamos los hijos para el siguiente nivel.
+            if(!aux->esHoja){
+                for(int i = 0; i <= aux->numClaves; ++i){
+                    if(aux->hijos[i] != nullptr) cola.Agregar(aux->hijos[i]);
+                }
+            }
+        }else{
+            // Fin de nivel: salto de linea y, si quedan nodos, marcador nuevo.
+            std::cout << std::endl;
+            if(!cola.EstaVacia()){
+                cola.Agregar(nullptr);
+            }
+        }
+    }
+}
+
+//***********************************************
+
+template<typename T, int Mgrado>
+void ArbolB<T, Mgrado>::ImprimirComoArbol() const
+{
+    if(EstaVacia()) return;
+    std::cout << std::endl;
+    ImprimirComoArbol(raiz, 0);
+}
+
 
 //***********************************************
 // METODOS PRIVADOS
@@ -284,153 +362,12 @@ void ArbolB<T, Mgrado>::DividirNodo(Nodo *nodoLleno, T &clavePromovida, Nodo *&h
     hijoNuevo = nuevoDer;
 }
 
-
 //***********************************************
-
-template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Buscar(T valor, Nodo *subRaiz) const
-{
-    if(subRaiz == nullptr) return false;
-
-    // Se recorre el arreglo de claves hasta encontrar la primera que sea >= al valor buscado.
-    int i = 0;
-    while(i < subRaiz->numClaves && subRaiz->claves[i] < valor){
-        ++i;
-    }
-
-    // Si se detuvo una clave igual al valor, se encontro wiiiii :D
-    if(i < subRaiz->numClaves && subRaiz->claves[i] == valor) return true;
-
-    // Si no, se baja al hijo correspondiente PERO Si es hoja, entonces no hay donde seguir pipipi
-    if(subRaiz->esHoja) return false;
-
-    return Buscar(valor, subRaiz->hijos[i]);
-}
-
-//***********************************************
-
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::Podar(Nodo *subRaiz)
-{
-    if(subRaiz == nullptr) return;
-
-    // Postorden: primero se poda cada hijo, luego se libera ese nodo.
-    if(!subRaiz->esHoja){
-        for(int i = 0; i <= subRaiz->numClaves; ++i){
-            Podar(subRaiz->hijos[i]);
-        }
-    }
-
-    delete subRaiz;
-}
-
-//***********************************************
-
-template<typename T, int Mgrado>
-int ArbolB<T, Mgrado>::ObtenerAltura(Nodo *subRaiz) const
-{
-    if(subRaiz == nullptr) return 0;
-    if(subRaiz->esHoja) return 1;
-
-    // Como todas las hojas estan en el mismo nivel, pues se baja desde el primer hijo
-    return 1 + ObtenerAltura(subRaiz->hijos[0]);
-}
-
-//***********************************
-// EXCEPCIONES
-//***********************************
-
-template<typename T, int Mgrado>
-ArbolB<T, Mgrado>::ArbolNoMemoria::ArbolNoMemoria() throw() {}
-
-//***********************************
-
-template<typename T, int Mgrado>
-const char *ArbolB<T, Mgrado>::ArbolNoMemoria::what() const throw()
-{
-    return "No hay memoria disponible.";
-}
-
-//***********************************
-// STUBS TEMPORALES (se completan en los siguientes pasos)
-//***********************************
-
-template<typename T, int Mgrado>
-bool ArbolB<T, Mgrado>::Eliminar(T valor)
-{
-    if(raiz == nullptr) return false;
-
-    bool seElimino = Eliminar(valor, raiz);
-
-    if(seElimino){
-        --numClaves;
-        // Si la raiz quedo vacia tras una fusion, la raiz baja un nivel
-        // Esta es la unica forma en que el arbol decrece en altura
-        if(raiz->numClaves == 0 && !raiz->esHoja){
-            Nodo *viejaRaiz     = raiz;
-            raiz                = raiz->hijos[0];
-            viejaRaiz->hijos[0] = nullptr;
-            delete viejaRaiz;
-        }
-    }
-    return seElimino;
-}
-
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::ImprimirPorNiveles() const
-{
-    if(EstaVacia()) return;
-
-    Cola<Nodo *> cola;
-    Nodo *aux;
-
-    cola.Agregar(raiz);
-    cola.Agregar(nullptr); // marcador de fin de nivel
-
-    while(!cola.EstaVacia()){
-
-        aux = cola.ObtenerCabeza();
-        cola.Eliminar();
-
-        if(aux != nullptr){
-            // Imprimimos las claves del nodo entre corchetes.
-            std::cout << "[";
-            for(int i = 0; i < aux->numClaves; ++i){
-                std::cout << aux->claves[i];
-                if(i + 1 < aux->numClaves) std::cout << ", ";
-            }
-            std::cout << "] ";
-
-            // Encolamos los hijos para el siguiente nivel.
-            if(!aux->esHoja){
-                for(int i = 0; i <= aux->numClaves; ++i){
-                    if(aux->hijos[i] != nullptr) cola.Agregar(aux->hijos[i]);
-                }
-            }
-        }else{
-            // Fin de nivel: salto de linea y, si quedan nodos, marcador nuevo.
-            std::cout << std::endl;
-            if(!cola.EstaVacia()){
-                cola.Agregar(nullptr);
-            }
-        }
-    }
-}
-
-//***********************************************
-
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::ImprimirComoArbol() const
-{
-    if(EstaVacia()) return;
-    std::cout << std::endl;
-    ImprimirComoArbol(raiz, 0);
-}
 
 template<typename T, int Mgrado>
 bool ArbolB<T, Mgrado>::Eliminar(T valor, Nodo *subRaiz)
 {
-    const int minClaves = (Mgrado / 2) - 1;
+    const int minClaves = (Mgrado + 1) / 2 - 1;
 
     int i = 0;
     while(i < subRaiz->numClaves && subRaiz->claves[i] < valor){
@@ -477,16 +414,12 @@ bool ArbolB<T, Mgrado>::Eliminar(T valor, Nodo *subRaiz)
     }
 }
 
-template<typename T, int Mgrado>
-void ArbolB<T, Mgrado>::CopiarPorNiveles(const ArbolB&)
-{
-
-}
+//***********************************************
 
 template<typename T, int Mgrado>
 void ArbolB<T, Mgrado>::RepararHijo(Nodo *padre, int indiceHijo)
 {
-    const int minClaves = (Mgrado / 2) - 1;
+    const int minClaves = (Mgrado + 1) / 2 - 1;
     Nodo *hijo = padre->hijos[indiceHijo];
 
     // Intento 1: prestamo del hermano izquierdo
@@ -595,6 +528,105 @@ void ArbolB<T, Mgrado>::RepararHijo(Nodo *padre, int indiceHijo)
     delete der;
 }
 
+//***********************************************
+
+template<typename T, int Mgrado>
+int ArbolB<T, Mgrado>::ObtenerAltura(Nodo *subRaiz) const
+{
+    if(subRaiz == nullptr) return 0;
+    if(subRaiz->esHoja) return 1;
+
+    // Como todas las hojas estan en el mismo nivel, pues se baja desde el primer hijo
+    return 1 + ObtenerAltura(subRaiz->hijos[0]);
+}
+
+//***********************************************
+
+template<typename T, int Mgrado>
+bool ArbolB<T, Mgrado>::Buscar(T valor, Nodo *subRaiz) const
+{
+    if(subRaiz == nullptr) return false;
+
+    // Se recorre el arreglo de claves hasta encontrar la primera que sea >= al valor buscado.
+    int i = 0;
+    while(i < subRaiz->numClaves && subRaiz->claves[i] < valor){
+        ++i;
+    }
+
+    // Si se detuvo una clave igual al valor, se encontro wiiiii :D
+    if(i < subRaiz->numClaves && subRaiz->claves[i] == valor) return true;
+
+    // Si no, se baja al hijo correspondiente PERO Si es hoja, entonces no hay donde seguir pipipi
+    if(subRaiz->esHoja) return false;
+
+    return Buscar(valor, subRaiz->hijos[i]);
+}
+
+//***********************************************
+
+template<typename T, int Mgrado>
+void ArbolB<T, Mgrado>::Podar(Nodo *subRaiz)
+{
+    if(subRaiz == nullptr) return;
+
+    // Postorden: primero se poda cada hijo, luego se libera ese nodo.
+    if(!subRaiz->esHoja){
+        for(int i = 0; i <= subRaiz->numClaves; ++i){
+            Podar(subRaiz->hijos[i]);
+        }
+    }
+
+    delete subRaiz;
+}
+
+template<typename T, int Mgrado>
+void ArbolB<T, Mgrado>::CopiarEstructura(const ArbolB &arbolOrigen)
+{
+    // Para que la copia tenga *exactamente* la misma estructura que el origen
+    // (misma raiz, mismos hijos, mismas claves en las mismas posiciones),
+    // clonamos nodo por nodo en vez de reinsertar las claves con Agregar.
+    // Si se hiciera por reinserciones, el arbol resultante podria tener la
+    // misma informacion pero una forma distinta dependiendo del orden en que
+    // se reinserten las claves.
+    if(arbolOrigen.raiz == nullptr) return;
+
+    raiz = ClonarNodo(arbolOrigen.raiz);
+    numClaves = arbolOrigen.numClaves;
+}
+
+//***********************************************
+
+template<typename T, int Mgrado>
+typename ArbolB<T, Mgrado>::Nodo *ArbolB<T, Mgrado>::ClonarNodo(Nodo *nodoOrigen)
+{
+    if(nodoOrigen == nullptr) return nullptr;
+
+    // Creamos un nodo nuevo, copiamos sus datos basicos y sus claves.
+    Nodo *copia;
+    try{
+        copia = new Nodo();
+    }catch(const std::bad_alloc&){
+        throw ArbolNoMemoria();
+    }
+    copia->numClaves = nodoOrigen->numClaves;
+    copia->esHoja    = nodoOrigen->esHoja;
+
+    for(int i = 0; i < nodoOrigen->numClaves; ++i){
+        copia->claves[i] = nodoOrigen->claves[i];
+    }
+
+    // Si no es hoja, clonamos recursivamente cada uno de los hijos.
+    if(!nodoOrigen->esHoja){
+        for(int i = 0; i <= nodoOrigen->numClaves; ++i){
+            copia->hijos[i] = ClonarNodo(nodoOrigen->hijos[i]);
+        }
+    }
+
+    return copia;
+}
+
+//***********************************************
+
 template<typename T, int Mgrado>
 void ArbolB<T, Mgrado>::ImprimirComoArbol(Nodo *subRaiz, int nivel) const
 {
@@ -624,9 +656,24 @@ void ArbolB<T, Mgrado>::ImprimirComoArbol(Nodo *subRaiz, int nivel) const
     }
 }
 
-//**********************************
+//***********************************************
+// EXCEPCIONES
+//***********************************************
+
+template<typename T, int Mgrado>
+ArbolB<T, Mgrado>::ArbolNoMemoria::ArbolNoMemoria() throw() {}
+
+//***********************************************
+
+template<typename T, int Mgrado>
+const char *ArbolB<T, Mgrado>::ArbolNoMemoria::what() const throw()
+{
+    return "No hay memoria disponible.";
+}
+
+//***********************************************
 // Flujos sobrecargados de entrada y salida
-//**********************************
+//***********************************************
 
 template<typename T, int Mgrado>
 std::ostream& operator<<(std::ostream& salida, const ArbolB<T, Mgrado>& arbol)
