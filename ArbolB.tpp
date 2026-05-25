@@ -38,7 +38,7 @@ ArbolB<T>::Nodo::~Nodo()
 //***********************************************
 
 template<typename T>
-ArbolB<T>::ArbolB(int M) : numClaves(0), raiz(nullptr), Mgrado(M)
+ArbolB<T>::ArbolB(int M) : Mgrado(M), numClaves(0), raiz(nullptr)
 {
     // numclaves = 0;
     // raiz = nullptr;
@@ -59,7 +59,7 @@ ArbolB<T>::~ArbolB()
 //***********************************************
 
 template<typename T>
-ArbolB<T>::ArbolB(const ArbolB &arbol) : numClaves(0), raiz(nullptr)
+ArbolB<T>::ArbolB(const ArbolB &arbol) : Mgrado(arbol.Mgrado), numClaves(0), raiz(nullptr)
 {
     // numClaves = 0;
     // raiz = nullptr;
@@ -73,6 +73,8 @@ ArbolB<T> & ArbolB<T>::operator=(const ArbolB &arbol)
 {
     if(this == &arbol) return *this;
     Vaciar();
+
+    Mgrado = arbol.Mgrado; // adopta el grado del origen
 
     CopiarEstructura(arbol);
     return *this;
@@ -213,7 +215,14 @@ void ArbolB<T>::Vaciar()
 template<typename T>
 void ArbolB<T>::ImprimirOrden() const
 {
+    if(EstaVacia()){
+        std::cout << "[ ]";
+        return;
+    }
 
+    std::cout << "[ ";
+    ImprimirOrden(raiz);
+    std::cout << "\b\b]";
 }
 
 //***********************************************
@@ -221,7 +230,10 @@ void ArbolB<T>::ImprimirOrden() const
 template<typename T>
 void ArbolB<T>::ImprimirPorNiveles() const
 {
-    if(EstaVacia()) return;
+    if(EstaVacia()){
+        std::cout << "[ ]";
+        return;
+    }
 
     Cola<Nodo *> cola;
     Nodo *aux;
@@ -264,7 +276,11 @@ void ArbolB<T>::ImprimirPorNiveles() const
 template<typename T>
 void ArbolB<T>::ImprimirComoArbol() const
 {
-    if(EstaVacia()) return;
+    if(EstaVacia()){
+        std::cout << "[ ]";
+        return;
+    }
+
     std::cout << std::endl;
     ImprimirComoArbol(raiz, 0);
 }
@@ -545,18 +561,6 @@ void ArbolB<T>::RepararHijo(Nodo *padre, int indiceHijo)
 //***********************************************
 
 template<typename T>
-int ArbolB<T>::ObtenerAltura(Nodo *subRaiz) const
-{
-    if(subRaiz == nullptr) return 0;
-    if(subRaiz->esHoja) return 1;
-
-    // Como todas las hojas estan en el mismo nivel, pues se baja desde el primer hijo
-    return 1 + ObtenerAltura(subRaiz->hijos[0]);
-}
-
-//***********************************************
-
-template<typename T>
 bool ArbolB<T>::Buscar(T valor, Nodo *subRaiz) const
 {
     if(subRaiz == nullptr) return false;
@@ -576,6 +580,19 @@ bool ArbolB<T>::Buscar(T valor, Nodo *subRaiz) const
     return Buscar(valor, subRaiz->hijos[i]);
 }
 
+
+//***********************************************
+
+template<typename T>
+int ArbolB<T>::ObtenerAltura(Nodo *subRaiz) const
+{
+    if(subRaiz == nullptr) return 0;
+    if(subRaiz->esHoja) return 1;
+
+    // Como todas las hojas estan en el mismo nivel, pues se baja desde el primer hijo
+    return 1 + ObtenerAltura(subRaiz->hijos[0]);
+}
+
 //***********************************************
 
 template<typename T>
@@ -592,6 +609,8 @@ void ArbolB<T>::Podar(Nodo *subRaiz)
 
     delete subRaiz;
 }
+
+//***********************************************
 
 template<typename T>
 void ArbolB<T>::CopiarEstructura(const ArbolB &arbolOrigen)
@@ -618,7 +637,7 @@ typename ArbolB<T>::Nodo *ArbolB<T>::ClonarNodo(Nodo *nodoOrigen)
     // Creamos un nodo nuevo, copiamos sus datos basicos y sus claves.
     Nodo *copia;
     try{
-        copia = new Nodo();
+        copia = new Nodo(Mgrado);
     }catch(const std::bad_alloc&){
         throw ArbolNoMemoria();
     }
@@ -637,6 +656,23 @@ typename ArbolB<T>::Nodo *ArbolB<T>::ClonarNodo(Nodo *nodoOrigen)
     }
 
     return copia;
+}
+
+//***********************************************
+
+template<typename T>
+void ArbolB<T>::ImprimirOrden(Nodo *subRaiz) const
+{
+    if(subRaiz == nullptr) return;
+
+    // Recorrido inorden generalizado: para cada clave, imprimimos primero el
+    // subarbol que esta a su izquierda, luego la clave. Al terminar todas las
+    // claves, imprimimos el ultimo subarbol derecho.
+    for(int i = 0; i < subRaiz->numClaves; ++i){
+        if(!subRaiz->esHoja) ImprimirOrden(subRaiz->hijos[i]);
+        std::cout << subRaiz->claves[i] << ", ";
+    }
+    if(!subRaiz->esHoja) ImprimirOrden(subRaiz->hijos[subRaiz->numClaves]);
 }
 
 //***********************************************
@@ -705,6 +741,6 @@ const char *ArbolB<T>::ArbolGrado::what() const throw()
 template<typename T>
 std::ostream& operator<<(std::ostream& salida, const ArbolB<T>& arbol)
 {
-    arbol.ImprimirComoArbol();
+    arbol.ImprimirPorNiveles();
     return salida;
 }

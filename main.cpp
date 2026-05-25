@@ -2,6 +2,7 @@
 
 #include "CapturaSegura.hpp"
 #include "ArbolB.hpp"
+#include "Menu.hpp"
 
 using namespace std;
 
@@ -20,37 +21,43 @@ enum Opciones_principales {
     IMPRIMIR,           ///< Imprime los elementos en orden.
     IMPRIMIRNIV,
     IMPRIMIRARBOL,
+    DATARANDOM,
     SALIR               ///< Termina el programa.
 };
 
 int main()
 {
     int opcion = -1;
-    int gradoUsuario = 0;
+    int grado = 3;
+
+    cout << "==================================" << endl;
+    cout << "Proyecto final: Arbol B" << endl;
+    cout << "==================================" << endl << endl;
 
     do{
-        CapturarNumero(opcion, "Grado del nodo: ");
-    }while(gradoUsuario < 3);
+        CapturarNumero(grado, "Grado del Arbol B: ");
+    }while(grado < 3);
 
-
-    ArbolB<int> arbolitoB (gradoUsuario);
-
-    int valor;
+    cout << "Grado valido!" << endl;
 
     system("pause");
+    system("CLS");
+
+    ArbolB<int> arbolitoB(grado);
+    int valor;
 
     do{
         cout << "==================================" << endl;
         cout << "Proyecto final: Arbol B" << endl;
         cout << "==================================" << endl << endl;
 
-        cout << "--- ARBOL(" << gradoUsuario << ") ACTUAL ---" << endl;
+        cout << "--- ARBOL(" << grado << ") ACTUAL ---" << endl;
         cout << arbolitoB << endl;
         cout << "------------------------" << endl << endl;
 
         cout << "Opciones:" << endl;
         cout << "\t" << AGREGAR << ") Agregar un valor." << endl;
-        cout << "\t" << ELIMINAR << ") Eliminar la ra\241z." << endl;
+        cout << "\t" << ELIMINAR << ") Eliminar un valor." << endl;
         cout << "\t" << BUSCAR << ") Buscar un elemento." << endl;
         cout << "\t" << NUMCLAVES << ") Obtener el n\243mero de claves totales." << endl;
         cout << "\t" << ALTURA << ") Obtener la altura del arbol." << endl;
@@ -60,6 +67,7 @@ int main()
         cout << "\t" << IMPRIMIR << ") Imprimir (en orden) (NO ESTA LISTA)." << endl;
         cout << "\t" << IMPRIMIRNIV << ") Imprimir (como arbol)." << endl;
         cout << "\t" << IMPRIMIRARBOL << ") Imprimir (como arbol acostado)." << endl;
+        cout << "\t" << DATARANDOM << ") Agregar datos aleatorios." << endl;
         cout << "\t" << SALIR << ") Salir del programa." << endl;
 
         do{
@@ -129,6 +137,10 @@ int main()
 
                 case IMPRIMIRARBOL:
                     arbolitoB.ImprimirComoArbol();
+                break;
+
+                case DATARANDOM :
+                    defDatosAleatorios(arbolitoB, 30);
                 break;
             }
 

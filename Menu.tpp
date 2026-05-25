@@ -1,6 +1,6 @@
 #include "Aleatorio.hpp"
 
-template <typename T, int Mgrado>
+template <typename T>
 void defDatosAleatorios(ArbolB<T>& arbolito, int numDatos)
 {
     int inicio = 1;
