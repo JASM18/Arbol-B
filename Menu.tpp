@@ -1,7 +1,37 @@
 #include <iostream>
+#include <sstream>
 
 #include "CapturaSegura.hpp"
 #include "Aleatorio.hpp"
+
+using std::cout;
+using std::endl;
+
+//***********************************************
+
+void limpiarPantalla()
+{
+#ifdef _WIN32
+    system("cls");   // para windows
+#else
+    system("clear"); // para linux
+#endif
+}
+
+//***********************************************
+
+void pausar()
+{
+    cout << "Presione Enter para continuar...";
+
+    // se limpia el buffer
+    if(std::cin.peek() == '\n'){
+        std::cin.ignore();
+    }
+
+    // pausa la ejecucion hasta que se presione Enter
+    std::cin.get();
+}
 
 //***********************************************
 
@@ -142,4 +172,76 @@ void defDatosAleatorios(ArbolB<T>& arbolito)
         arbolito.Agregar(valorAleatorio);
     }
     std::cout << "Datos agregados exitosamente!" << std::endl;
+}
+
+//***********************************************
+
+void areaPruebas()
+{
+    cout << "==================================" << endl;
+    cout << "Arbol B (Area de pruebas)" << endl;
+    cout << "==================================" << endl << endl;
+
+    // ---------------------------------------------------------
+    // Prueba 1: División básica
+    // ---------------------------------------------------------
+    ArbolB<int> arbolPrueba(3); // Grado 3 (Max 2 claves por nodo)
+
+    cout << "-> Probando la division (Grado 3)..." << endl;
+    cout << "Insertando: 10, 15, 30" << endl;
+    arbolPrueba.Agregar(10);
+    arbolPrueba.Agregar(15);
+    // Al agregar el 30, el nodo supera las 2 claves permitidas y se divide
+    arbolPrueba.Agregar(30);
+
+    arbolPrueba.ImprimirPorNiveles();
+    cout << "Altura actual: " << arbolPrueba.ObtenerAltura() << endl << endl;
+
+    // ---------------------------------------------------------
+    // Prueba 2: Desbordamiento Central (Sandwich)
+    // ---------------------------------------------------------
+    ArbolB<int> arbolSandwich(5);
+
+    cout << "-> Probando desbordamiento central (Grado 5)..." << endl;
+    cout << "Insertando valores alternados: 10, 100, 20, 90, 30, 80, 40, 70, 50, 60" << endl;
+
+    int arr[] = {10, 100, 20, 90, 30, 80, 40, 70, 50, 60};
+    for(int i = 0; i < 10; i++) {
+        arbolSandwich.Agregar(arr[i]);
+    }
+
+    arbolSandwich.ImprimirPorNiveles();
+    cout << endl;
+
+    // ---------------------------------------------------------
+    // Prueba 3: Manejo de Clones (Duplicados)
+    // ---------------------------------------------------------
+    ArbolB<int> arbolClones(5);
+
+    cout << "-> Probando insercion de clones / duplicados (Grado 5)..." << endl;
+    cout << "Insertando ocho veces el numero 42:" << endl;
+
+    for(int i = 0; i < 8; i++) {
+        arbolClones.Agregar(42);
+    }
+
+    arbolClones.ImprimirPorNiveles();
+    cout << endl;
+
+    // ---------------------------------------------------------
+    // Prueba 4: Plantillas con Caracteres ASCII
+    // ---------------------------------------------------------
+    ArbolB<char> arbolChar(5);
+
+    cout << "-> Probando el uso de templates con caracteres (Grado 5)..." << endl;
+    cout << "Insertando la palabra desordenada: B, A, L, A, T, R, O" << endl;
+
+    char palabra[] = {'B', 'A', 'L', 'A', 'T', 'R', 'O'};
+    for(int i = 0; i < 7; i++) {
+        arbolChar.Agregar(palabra[i]);
+    }
+
+    arbolChar.ImprimirPorNiveles();
+    cout << "Impresion InOrden (verificando orden alfabetico): ";
+    arbolChar.ImprimirOrden();
 }

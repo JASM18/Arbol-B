@@ -3,6 +3,10 @@
 
 #include "ArbolB.hpp"
 
+void limpiarPantalla();
+
+void pausar();
+
 // Funciones de gestion del menu para probar la clase ArbolB.
 
 template<typename T>

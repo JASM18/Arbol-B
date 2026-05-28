@@ -24,6 +24,7 @@ enum Opciones_principales {
     IMPRIMIRNIV,
     IMPRIMIRARBOL,
     DATARANDOM,
+    PRUEBAS,
     SALIR               ///< Termina el programa.
 };
 
@@ -44,8 +45,8 @@ int main()
 
     cout << "Grado valido!" << endl;
 
-    system("pause");
-    system("CLS");
+    pausar();
+    limpiarPantalla();
 
     ArbolB<int> arbolitoB(grado);
 
@@ -71,6 +72,7 @@ int main()
         cout << "\t" << IMPRIMIRNIV << ") Imprimir (como arbol)." << endl;
         cout << "\t" << IMPRIMIRARBOL << ") Imprimir (como arbol acostado)." << endl;
         cout << "\t" << DATARANDOM << ") Agregar datos aleatorios." << endl;
+        cout << "\t" << PRUEBAS << ") Area de pruebas." << endl;
         cout << "\t" << SALIR << ") Salir del programa." << endl;
 
         do{
@@ -129,6 +131,10 @@ int main()
                 case DATARANDOM:
                     defDatosAleatorios(arbolitoB);
                 break;
+
+                case PRUEBAS:
+                    areaPruebas();
+                break;
             }
 
         }catch(const char* mensaje){
@@ -140,8 +146,8 @@ int main()
         }
 
         cout << endl;
-        system ("pause");
-        system("CLS");
+        pausar();
+        limpiarPantalla();
     }while(opcion != SALIR);
 
     cout << "\nEl programa ha terminado." << endl;

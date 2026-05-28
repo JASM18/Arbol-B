@@ -3,7 +3,7 @@
  * \brief Implementaci&oacute;n de la generaci&oacute;n de n&uacute;meros aleatorios.
  */
 
-#include <windows.h>
+#include <cstdlib>
 
 int aleatorio(int inicio, int fin)
 {
