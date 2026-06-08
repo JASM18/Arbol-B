@@ -1,6 +1,6 @@
 /**
  * \file ArbolB.hpp
- * Este archivo contiene la definici&oacute;n de la plantilla de clase ArbolB.
+ * \brief Este archivo contiene la definici&oacute;n de la plantilla de clase ArbolB.
  * \author Dur&oacute;n Urbina, Angel Daniel
  * \author Portugal Arreola, Marian Bethsab&eacute;
  * \author Rivera L&oacute;pez, Issac Abraham
@@ -81,7 +81,7 @@ public:
      */
     ArbolB(int M);
 
-    /** \brief Destructor por default que libera toda la memoria din&aacute;mica del &aacute;rbol.
+    /** \brief Destructor por default que libera la memoria din&aacute;mica del &aacute;rbol.
      */
     ~ArbolB();
 
@@ -92,7 +92,7 @@ public:
 
     /** \brief Operador de asignaci&oacute;n sobrecargado.
      * \param arbol Referencia constante al &aacute;rbol origen.
-     * \return Una referencia al &aacute;rbol actual (*this).
+     * \return Referencia al &aacute;rbol actual (*this).
      */
     ArbolB& operator=(const ArbolB& arbol);
 
@@ -152,7 +152,7 @@ public:
      */
     void ImprimirPorNiveles() const;
 
-    /** \brief M&eacute;todo para imprimir los elementos del &aacute;rbol mostrando su estructura visual.
+    /** \brief M&eacute;todo para imprimir los elementos del &aacute;rbol mostrando su estructura como &aacute;rbol.
      * \return void
      */
     void ImprimirComoArbol() const;

@@ -1,6 +1,6 @@
 /**
  * \file ArbolB.tpp
- * Este archivo contiene la implementaci&oacute;n de los m&eacute;todos de la plantilla de clase ArbolB.
+ * \brief Este archivo contiene la implementaci&oacute;n de los m&eacute;todos de la plantilla de clase ArbolB.
  * \author Dur&oacute;n Urbina, Angel Daniel
  * \author Portugal Arreola, Marian Bethsab&eacute;
  * \author Rivera L&oacute;pez, Issac Abraham
