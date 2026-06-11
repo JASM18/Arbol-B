@@ -208,7 +208,8 @@ private:
         /** \brief Destructor de la estructura Nodo.
          */
         ~Nodo();  // Libera la memoria de los arreglos (no destruye recursivamente)
-    }*raiz;             ///< Puntero al nodo ra&iacute;z del &aacute;rbol B.
+    }
+    *raiz;              ///< Puntero al nodo ra&iacute;z del &aacute;rbol B.
 
     // =====================
     // Funciones de utileria

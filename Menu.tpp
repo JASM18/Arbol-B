@@ -1,3 +1,13 @@
+/**
+ * \file Menu.tpp
+ * \brief Implementaci&oacute;n de las funciones del men&uacute; y pruebas para el &Aacute;rbol B.
+ * \author Dur&oacute;n Urbina, Angel Daniel
+ * \author Portugal Arreola, Marian Bethsab&eacute;
+ * \author Rivera L&oacute;pez, Issac Abraham
+ * \author S&aacute;nchez Montoy, Jes&uacute;s Axel
+ * \date 27/05/2026
+ */
+
 #include <iostream>
 #include <sstream>
 
@@ -54,9 +64,9 @@ void GEliminar(ArbolB<T> &arbol)
     CapturarNumero(valor, "Valor a eliminar: ");
 
     if(arbol.Eliminar(valor)){
-        std::cout << "Se elimin\242 el valor " << valor << " del arbol." << std::endl;
+        std::cout << "Se elimin\242 el valor " << valor << " del \240rbol." << std::endl;
     }else{
-        std::cout << "[:(] El valor " << valor << " no se encontr\242 en el arbol." << std::endl;
+        std::cout << "[:(] El valor " << valor << " no se encontr\242 en el \240rbol." << std::endl;
     }
 }
 
@@ -68,9 +78,9 @@ void GBuscar(const ArbolB<T> &arbol)
     T valor;
     CapturarNumero(valor, "Valor a buscar: ");
     if(arbol.Buscar(valor)){
-        std::cout << "El valor " << valor << " S\326 se encontro." << std::endl;
+        std::cout << "El valor " << valor << " S\326 se encontr\242." << std::endl;
     }else{
-        std::cout << "El valor " << valor << " NO se encontro." << std::endl;
+        std::cout << "El valor " << valor << " NO se encontr\242." << std::endl;
     }
 }
 
@@ -79,7 +89,7 @@ void GBuscar(const ArbolB<T> &arbol)
 template<typename T>
 void GNumClaves(const ArbolB<T> &arbol)
 {
-    std::cout << "El arbol tiene " << arbol.ObtenerNumClaves() << " claves en total." << std::endl;
+    std::cout << "El \240rbol tiene " << arbol.ObtenerNumClaves() << " claves en total." << std::endl;
 }
 
 //***********************************************
@@ -87,7 +97,7 @@ void GNumClaves(const ArbolB<T> &arbol)
 template<typename T>
 void GAltura(const ArbolB<T> &arbol)
 {
-    std::cout << "El arbol tiene altura " << arbol.ObtenerAltura() << "." << std::endl;
+    std::cout << "El \240rbol tiene altura " << arbol.ObtenerAltura() << "." << std::endl;
 }
 
 //***********************************************
@@ -95,7 +105,7 @@ void GAltura(const ArbolB<T> &arbol)
 template<typename T>
 void GGrado(const ArbolB<T> &arbol)
 {
-    std::cout << "El arbol es de grado " << arbol.ObtenerGrado() << "." << std::endl;
+    std::cout << "El \240rbol es de grado " << arbol.ObtenerGrado() << "." << std::endl;
 }
 
 //***********************************************
@@ -104,9 +114,9 @@ template<typename T>
 void GEstaVacia(const ArbolB<T> &arbol)
 {
     if(arbol.EstaVacia()){
-        std::cout << "El arbol S\326 est\240 vac\241o." << std::endl;
+        std::cout << "El \240rbol S\326 est\240 vac\241o." << std::endl;
     }else{
-        std::cout << "El arbol NO est\240 vac\241o." << std::endl;
+        std::cout << "El \240rbol NO est\240 vac\241o." << std::endl;
     }
 }
 
@@ -116,10 +126,10 @@ template<typename T>
 void GVaciar(ArbolB<T> &arbol)
 {
     if(arbol.EstaVacia()){
-        std::cout << "El arbol ya estaba vacio." << std::endl;
+        std::cout << "El \240rbol ya estaba vac\241o." << std::endl;
     }else{
         arbol.Vaciar();
-        std::cout << "El arbol ha sido vaciado por completo." << std::endl;
+        std::cout << "El \240rbol ha sido vaciado por completo." << std::endl;
     }
 }
 
@@ -147,7 +157,7 @@ void GImprimirPorNiveles(const ArbolB<T> &arbol)
 template<typename T>
 void GImprimirComoArbol(const ArbolB<T> &arbol)
 {
-    std::cout << "Estructura del arbol:";
+    std::cout << "Estructura del \240rbol:";
     arbol.ImprimirComoArbol();
 }
 
@@ -159,7 +169,7 @@ void defDatosAleatorios(ArbolB<T>& arbolito)
     int numDatos;
 
     do{
-        CapturarNumero(numDatos, "Numero de datos a ingresar: ");
+        CapturarNumero(numDatos, "N\243mero de datos a ingresar: ");
     }while(numDatos < 1);
 
     int inicio = 1;
@@ -171,7 +181,7 @@ void defDatosAleatorios(ArbolB<T>& arbolito)
 
         arbolito.Agregar(valorAleatorio);
     }
-    std::cout << "Datos agregados exitosamente!" << std::endl;
+    std::cout << "\255Datos agregados exitosamente!" << std::endl;
 }
 
 //***********************************************
@@ -179,7 +189,7 @@ void defDatosAleatorios(ArbolB<T>& arbolito)
 void areaPruebas()
 {
     cout << "==================================" << endl;
-    cout << "Arbol B (Area de pruebas)" << endl;
+    cout << "\265rbol B (\265rea de pruebas)" << endl;
     cout << "==================================" << endl << endl;
 
     // ---------------------------------------------------------
@@ -187,7 +197,7 @@ void areaPruebas()
     // ---------------------------------------------------------
     ArbolB<int> arbolPrueba(3); // Grado 3 (Max 2 claves por nodo)
 
-    cout << "-> Probando la division (Grado 3)..." << endl;
+    cout << "-> Probando la divisi\242n (Grado 3)..." << endl;
     cout << "Insertando: 10, 15, 30" << endl;
     arbolPrueba.Agregar(10);
     arbolPrueba.Agregar(15);
@@ -218,7 +228,7 @@ void areaPruebas()
     // ---------------------------------------------------------
     ArbolB<int> arbolClones(5);
 
-    cout << "-> Probando insercion de clones / duplicados (Grado 5)..." << endl;
+    cout << "-> Probando inserci\242n de clones / duplicados (Grado 5)..." << endl;
     cout << "Insertando ocho veces el numero 42:" << endl;
 
     for(int i = 0; i < 8; i++) {
@@ -242,6 +252,6 @@ void areaPruebas()
     }
 
     arbolChar.ImprimirPorNiveles();
-    cout << "Impresion InOrden (verificando orden alfabetico): ";
+    cout << "Impresi\242n InOrden (verificando orden alfab\202tico): ";
     arbolChar.ImprimirOrden();
 }

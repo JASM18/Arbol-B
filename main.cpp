@@ -6,9 +6,6 @@
  * \author Rivera L&oacute;pez, Issac Abraham
  * \author S&aacute;nchez Montoy, Jes&uacute;s Axel
  * \date 21/05/2026
- * \code{.cpp}
-
- * \endcode
  */
 
 #include <iostream>
@@ -36,14 +33,11 @@ enum Opciones_principales {
     IMPRIMIR,           ///< Imprime los elementos en orden ascendente.
     IMPRIMIRNIV,        ///< Imprime los elementos agrup&aacute;ndolos por niveles.
     IMPRIMIRARBOL,      ///< Imprime los elementos simulando la estructura de un &aacute;rbol acostado.
-    DATARANDOM,         ///< Inserta un conjunto de datos aleatorios para pruebas r&aacute;pidas.
-    PRUEBAS,            ///< Ejecuta la secci&oacute;n dedicada a rutinas de prueba.
-    SALIR               ///< Termina la ejecuci&oacute;n del programa.
+    DATARANDOM,         ///< Agrega un conjunto de datos aleatorios al &aacute;rbol.
+    PRUEBAS,            ///< Ejecuta la secci&oacute;n para pruebas.
+    SALIR               ///< Sale del programa.
 };
 
-/** \brief Funci&oacute;n principal que ejecuta el men&uacute; interactivo del programa.
- * \return Un n&uacute;mero entero que indica el estado de terminaci&oacute;n del programa (0 si fue exitoso).
- */
 int main()
 {
     srand((time(NULL)));
