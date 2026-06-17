@@ -12,28 +12,32 @@
  *
  * int main(){
  * try{
- * // Creamos un Arbol B de grado 3
- * ArbolB<int> Arbolito(3);
- * Arbolito.Agregar(15);
- * Arbolito.Agregar(5);
- * Arbolito.Agregar(20);
- * Arbolito.Agregar(25); // Esto causa la division de la raiz
+ * ArbolB<int> arbolito(3);
+ * arbolito.Agregar(15);
+ * arbolito.Agregar(5);
+ * arbolito.Agregar(20);
+ * arbolito.Agregar(25); // Esto causa la division de la raiz
  *
- * std::cout << "Claves en el arbol: " << Arbolito.ObtenerNumClaves() << std::endl;
- * std::cout << "La altura actual es: " << Arbolito.ObtenerAltura() << std::endl;
+ * std::cout << "Claves en el arbol: " << arbolito.ObtenerNumClaves() << std::endl;
+ * std::cout << "La altura actual es: " << arbolito.ObtenerAltura() << std::endl;
  *
  * std::cout << "\nEstructura del &aacute;rbol:" << std::endl;
- * Arbolito.ImprimirPorNiveles();
+ * arbolito.ImprimirPorNiveles();
  * std::cout << "\nEliminando el 5:" << std::endl;
- * Arbolito.Eliminar(5);
- * std::cout << "Claves restantes: " << Arbolito.ObtenerNumClaves() << std::endl;
+ * arbolito.Eliminar(5);
+ * std::cout << "Claves restantes: " << arbolito.ObtenerNumClaves() << std::endl;
  *
  * // Si se intenta inicializar con grado < 3, lanza la excepcion ArbolGrado
  * // ArbolB<int> arbolInvalido(2);
- * }catch(const std::exception& error){
- *      std::cerr << "Error: " << error.what() << std::endl;
+ * }catch(const char* mensaje){
+ *     cerr << "Error: " << mensaje << endl;
+ * }catch(const exception &error){
+ *     cerr << "Error: " << error.what() << endl;
+ * }catch(...){
+ *     cerr << "El programa tuvo un error inesperado." << endl;
  * }
  *
+ * system("pause");
  * return 0;
  * }
  * \endcode

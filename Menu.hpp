@@ -16,7 +16,6 @@
  * ArbolB<int> arbolPrueba(5);
  * std::cout << "--- Usando las funciones del Men\243 ---" << std::endl;
  *
- * // El programa pausara aqui hasta que el usuario pulse una tecla
  * GAgregar(arbolPrueba);
  * GAgregar(arbolPrueba);
  * std::cout << "\nImprimiendo:" << std::endl;
@@ -24,8 +23,12 @@
  * std::cout << "\nN\243m. de claves:" << std::endl;
  * GNumClaves(arbolPrueba);
  * GAltura(arbolPrueba);
- * }catch(const std::exception& error){
- *     std::cerr << "Error: " << error.what() << std::endl;
+ * }catch(const char* mensaje){
+ *     cerr << "Error: " << mensaje << endl;
+ * }catch(const exception &error){
+ *     cerr << "Error: " << error.what() << endl;
+ * }catch(...){
+ *     cerr << "El programa tuvo un error inesperado." << endl;
  * }
  *
  * return 0;
