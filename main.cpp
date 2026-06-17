@@ -1,6 +1,6 @@
 /**
  * \file main.cpp
- * \brief Este archivo contiene la ejecuci&oacute;n principal y el men&uacute; interactivo para probar la clase ArbolB.
+ * \brief Este archivo contiene la ejecuci&oacute;n principal y el men&uacute; para probar la clase ArbolB.
  * \author Dur&oacute;n Urbina, Angel Daniel
  * \author Portugal Arreola, Marian Bethsab&eacute;
  * \author Rivera L&oacute;pez, Issac Abraham
@@ -28,7 +28,7 @@ enum Opciones_principales {
     NUMCLAVES,          ///< Muestra el n&uacute;mero total de claves en el &aacute;rbol.
     ALTURA,             ///< Calcula y muestra la altura actual del &aacute;rbol B.
     GRADO,              ///< Muestra el grado (M) del &aacute;rbol.
-    ESTAVACIA,          ///< Indica si el &aacute;rbol B actual no tiene elementos.
+    ESTAVACIA,          ///< Indica si el &aacute;rbol B actual est&aacute; vac&iacute;.
     VACIAR,             ///< Elimina todos los elementos del &aacute;rbol B actual.
     IMPRIMIR,           ///< Imprime los elementos en orden ascendente.
     IMPRIMIRNIV,        ///< Imprime los elementos agrup&aacute;ndolos por niveles.
