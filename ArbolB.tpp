@@ -652,7 +652,7 @@ typename ArbolB<T>::Nodo *ArbolB<T>::ClonarNodo(Nodo *nodoOrigen)
         throw ArbolNoMemoria();
     }
     copia->numClaves = nodoOrigen->numClaves;
-    copia->esHoja    = nodoOrigen->esHoja;
+    copia->esHoja = nodoOrigen->esHoja;
 
     for(int i = 0; i < nodoOrigen->numClaves; ++i){
         copia->claves[i] = nodoOrigen->claves[i];
