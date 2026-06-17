@@ -193,9 +193,9 @@ void areaPruebas()
     cout << "==================================" << endl << endl;
 
     // ---------------------------------------------------------
-    // Prueba 1: División básica
+    // División
     // ---------------------------------------------------------
-    ArbolB<int> arbolPrueba(3); // Grado 3 (Max 2 claves por nodo)
+    ArbolB<int> arbolPrueba(3); // Grado 3
 
     cout << "-> Probando la divisi\242n (Grado 3)..." << endl;
     cout << "Insertando: 10, 15, 30" << endl;
@@ -208,11 +208,12 @@ void areaPruebas()
     cout << "Altura actual: " << arbolPrueba.ObtenerAltura() << endl << endl;
 
     // ---------------------------------------------------------
-    // Prueba 2: Desbordamiento Central (Sandwich)
+    // Desbordamiento
     // ---------------------------------------------------------
+
     ArbolB<int> arbolSandwich(5);
 
-    cout << "-> Probando desbordamiento central (Grado 5)..." << endl;
+    cout << "-> Probando desbordamiento" << endl;
     cout << "Insertando valores alternados: 10, 100, 20, 90, 30, 80, 40, 70, 50, 60" << endl;
 
     int arr[] = {10, 100, 20, 90, 30, 80, 40, 70, 50, 60};
@@ -224,11 +225,11 @@ void areaPruebas()
     cout << endl;
 
     // ---------------------------------------------------------
-    // Prueba 3: Manejo de Clones (Duplicados)
+    // Manejo de Clones (Duplicados)
     // ---------------------------------------------------------
     ArbolB<int> arbolClones(5);
 
-    cout << "-> Probando inserci\242n de clones / duplicados (Grado 5)..." << endl;
+    cout << "-> Probando inserci\242n de clones / duplicados (Grado 5)" << endl;
     cout << "Insertando ocho veces el numero 42:" << endl;
 
     for(int i = 0; i < 8; i++) {
@@ -239,7 +240,7 @@ void areaPruebas()
     cout << endl;
 
     // ---------------------------------------------------------
-    // Prueba 4: Plantillas con Caracteres ASCII
+    // Plantillas con Caracteres ASCII
     // ---------------------------------------------------------
     ArbolB<char> arbolChar(5);
 

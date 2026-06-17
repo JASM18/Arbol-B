@@ -7,7 +7,29 @@
  * \author S&aacute;nchez Montoy, Jes&uacute;s Axel
  * \date 27/05/2026
  * \code{.cpp}
+ * #include <iostream>
+ * #include "ArbolB.hpp"
+ * #include "Menu.hpp"
  *
+ * int main(){
+ * try{
+ * ArbolB<int> arbolPrueba(5);
+ * std::cout << "--- Usando las funciones del Men\243 ---" << std::endl;
+ *
+ * // El programa pausara aqui hasta que el usuario pulse una tecla
+ * GAgregar(arbolPrueba);
+ * GAgregar(arbolPrueba);
+ * std::cout << "\nImprimiendo:" << std::endl;
+ * GImprimirPorNiveles(arbolPrueba);
+ * std::cout << "\nN\243m. de claves:" << std::endl;
+ * GNumClaves(arbolPrueba);
+ * GAltura(arbolPrueba);
+ * }catch(const std::exception& error){
+ *     std::cerr << "Error: " << error.what() << std::endl;
+ * }
+ *
+ * return 0;
+ * }
  * \endcode
  */
 

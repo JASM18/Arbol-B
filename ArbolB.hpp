@@ -7,7 +7,35 @@
  * \author S&aacute;nchez Montoy, Jes&uacute;s Axel
  * \date 21/05/2026
  * \code{.cpp}
-//falta el codigo
+ * #include <iostream>
+ * #include "ArbolB.hpp"
+ *
+ * int main(){
+ * try{
+ * // Creamos un Arbol B de grado 3
+ * ArbolB<int> Arbolito(3);
+ * Arbolito.Agregar(15);
+ * Arbolito.Agregar(5);
+ * Arbolito.Agregar(20);
+ * Arbolito.Agregar(25); // Esto causa la division de la raiz
+ *
+ * std::cout << "Claves en el arbol: " << Arbolito.ObtenerNumClaves() << std::endl;
+ * std::cout << "La altura actual es: " << Arbolito.ObtenerAltura() << std::endl;
+ *
+ * std::cout << "\nEstructura del &aacute;rbol:" << std::endl;
+ * Arbolito.ImprimirPorNiveles();
+ * std::cout << "\nEliminando el 5:" << std::endl;
+ * Arbolito.Eliminar(5);
+ * std::cout << "Claves restantes: " << Arbolito.ObtenerNumClaves() << std::endl;
+ *
+ * // Si se intenta inicializar con grado < 3, lanza la excepcion ArbolGrado
+ * // ArbolB<int> arbolInvalido(2);
+ * }catch(const std::exception& error){
+ *      std::cerr << "Error: " << error.what() << std::endl;
+ * }
+ *
+ * return 0;
+ * }
  * \endcode
  */
 
