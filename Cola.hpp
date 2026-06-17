@@ -1,6 +1,6 @@
 /**
  * \file Cola.hpp
- * Este archivo contiene la definici&oacute;n de la plantilla de clase Cola con elementos enlazados de forma circular.
+ * \brief Este archivo contiene la definici&oacute;n de la plantilla de clase Cola con elementos enlazados de forma circular.
  * \authors
 S&aacute;nchez Montoy, Jes&uacute;s Axel
 Portugal Arreola, Marian Bethsab&eacute;

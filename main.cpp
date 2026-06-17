@@ -46,14 +46,14 @@ int main()
     int grado = 3;
 
     cout << "==================================" << endl;
-    cout << "Proyecto final: Arbol B" << endl;
+    cout << "Proyecto final: \265rbol B" << endl;
     cout << "==================================" << endl << endl;
 
     do{
-        CapturarNumero(grado, "Grado del Arbol B: ");
+        CapturarNumero(grado, "Grado del \265rbol B: ");
     }while(grado < 3);
 
-    cout << "Grado v\240lido!" << endl;
+    cout << "\255Grado v\240lido!" << endl;
 
     pausar();
     limpiarPantalla();
@@ -62,10 +62,10 @@ int main()
 
     do{
         cout << "==================================" << endl;
-        cout << "Proyecto final: Arbol B" << endl;
+        cout << "Proyecto final: \265rbol B" << endl;
         cout << "==================================" << endl << endl;
 
-        cout << "--- Arbol B(M=" << grado << ") actual ---" << endl;
+        cout << "--- \265rbol B(M=" << grado << ") actual ---" << endl;
         cout << arbolitoB;
         cout << "------------------------" << endl << endl;
 
