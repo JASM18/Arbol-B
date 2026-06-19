@@ -754,3 +754,47 @@ std::ostream& operator<<(std::ostream& salida, const ArbolB<T>& arbol)
     arbol.ImprimirPorNiveles();
     return salida;
 }
+
+// ============================================================
+// METODOS NUEVOS PARA EXPORTAR LA ESTRUCTURA A LA GUI
+// Agregar al final de ArbolB.tpp
+// ============================================================
+
+//***********************************************
+
+template<typename T>
+typename ArbolB<T>::NodoVista ArbolB<T>::ExportarVista(bool hayClaveBuscada, T claveBuscada) const
+{
+    if(raiz == nullptr){
+        NodoVista vacia;
+        vacia.esHoja = true;
+        vacia.resaltado = false;
+        return vacia;
+    }
+    return ExportarNodo(raiz, hayClaveBuscada, claveBuscada);
+}
+
+//***********************************************
+
+template<typename T>
+typename ArbolB<T>::NodoVista ArbolB<T>::ExportarNodo(Nodo *nodo, bool hayClave, T clave) const
+{
+    NodoVista vista;
+    vista.esHoja = nodo->esHoja;
+    vista.resaltado = false;
+
+    for(int i = 0; i < nodo->numClaves; ++i){
+        vista.claves.push_back(nodo->claves[i]);
+        if(hayClave && nodo->claves[i] == clave){
+            vista.resaltado = true;
+        }
+    }
+
+    if(!nodo->esHoja){
+        for(int i = 0; i <= nodo->numClaves; ++i){
+            vista.hijos.push_back(ExportarNodo(nodo->hijos[i], hayClave, clave));
+        }
+    }
+
+    return vista;
+}

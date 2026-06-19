@@ -48,6 +48,7 @@
 
 #include <iostream>
 #include <exception>
+#include <vector>
 
 // Un arbol B se define dado un grado M
 // Cada nodo tiene ahora una lista de valores, no como en el arbolAVL que este tiene solo un valor
@@ -189,6 +190,20 @@ public:
      */
     void ImprimirComoArbol() const;
 
+        // ---- Soporte para visualización ----
+    // Representación de SOLO LECTURA de un nodo del árbol, pensada para
+    // ser consumida por una interfaz gráfica. No expone el Nodo interno:
+    // es una copia segura de sus datos. Así la GUI no depende de cómo
+    // ArbolB almacena los nodos internamente.
+    struct NodoVista {
+        std::vector<T> claves;              // las claves de este nodo
+        std::vector<NodoVista> hijos;       // sus hijos, ya como NodoVista
+        bool esHoja;
+        bool resaltado;   // true si este nodo contiene la clave buscada
+    };
+
+    NodoVista ExportarVista(bool hayClaveBuscada = false, T claveBuscada = T()) const;
+
     /**
      * \brief Excepci&oacute;n lanzada cuando ocurren fallos de memoria din&aacute;mica.
      */
@@ -240,8 +255,7 @@ private:
         /** \brief Destructor de la estructura Nodo.
          */
         ~Nodo();  // Libera la memoria de los arreglos (no destruye recursivamente)
-    }
-    *raiz;              ///< Puntero al nodo ra&iacute;z del &aacute;rbol B.
+    } *raiz;              ///< Puntero al nodo ra&iacute;z del &aacute;rbol B.
 
     // =====================
     // Funciones de utileria
@@ -331,6 +345,9 @@ private:
      * \return void
      */
     void ImprimirComoArbol(Nodo *subRaiz, int nivel) const;
+
+    // Auxiliar: copia recursivamente un Nodo interno a un NodoVista.
+    NodoVista ExportarNodo(Nodo *nodo, bool hayClave, T clave) const;
 };
 
 #include "ArbolB.tpp"

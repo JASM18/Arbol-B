@@ -42,7 +42,8 @@
 		<Unit filename="Cola.tpp" />
 		<Unit filename="Menu.hpp" />
 		<Unit filename="Menu.tpp" />
-		<Unit filename="main.cpp" />
+		<Unit filename="main_consola.cpp" />
+		<Unit filename="main_gui.cpp" />
 		<Extensions>
 			<DoxyBlocks>
 				<comment_style block="0" line="0" />
