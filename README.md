@@ -1,6 +1,6 @@
 # Árbol B
 
-![C++](https://img.shields.io/badge/C++-Standard-blue.svg)
+![C++](https://img.shields.io/badge/C++-17-blue.svg)
 ![Linux](https://img.shields.io/badge/Linux-Supported-yellow.svg)
 ![Windows](https://img.shields.io/badge/Windows-Supported-blue.svg)
 
@@ -18,80 +18,127 @@ El programa se desarrolló y se hicieron las pruebas correspondientes en el sist
 | CMake | 3.16 o superior | Automatizar el ensamblado y generar el proyecto |
 | Qt | Qt 6 (módulo Widgets) | Únicamente para el ejecutable gráfico |
 
-El ejecutable de **consola** no requiere Qt: solo el compilador y CMake. El ejecutable **gráfico** sí requiere tener Qt 6 instalado.
-
-### Instalación de dependencias en Linux
-
-En distribuciones basadas en Arch (como CachyOS):
-
-```bash
-sudo pacman -S cmake qt6-base gcc
-```
-
-En distribuciones basadas en Debian/Ubuntu:
-
-```bash
-sudo apt install cmake qt6-base-dev g++
-```
-
-### Instalación de dependencias en Windows
-
-1. **Compilador y CMake**: instala [Visual Studio](https://visualstudio.microsoft.com/) con la carga de trabajo "Desarrollo para el escritorio con C++" (incluye el compilador MSVC y CMake). Alternativamente, puedes usar [MinGW-w64](https://www.mingw-w64.org/) como compilador y descargar [CMake](https://cmake.org/download/) por separado.
-2. **Qt 6**: descarga el instalador oficial desde [qt.io](https://www.qt.io/download-qt-installer) y, durante la instalación, selecciona el módulo **Qt 6 con el compilador que vayas a usar** (por ejemplo, MSVC o MinGW).
+El ejecutable de **consola** no requiere Qt: solo el compilador y CMake. El ejecutable **gráfico** sí requiere tener Qt 6 instalado (solo si se va a compilar desde el código fuente).
 
 ## Instrucciones de ejecución
 
-Primero, clona el repositorio (funciona igual en Windows, Linux y macOS):
+Hay dos formas de usar este programa según lo que necesites:
+
+- **Solo quiero usar el programa** → ve a [Para usuarios (ejecutable listo)](#para-usuarios-ejecutable-listo).
+- **Quiero compilarlo desde el código fuente** → ve a [Para desarrolladores (compilar desde el código)](#para-desarrolladores-compilar-desde-el-código).
+
+---
+
+### Para usuarios (ejecutable listo)
+
+Si solo quieres ejecutar el programa sin compilar nada, esta es la forma más sencilla.
+
+#### Windows
+
+1. Descarga el archivo `.zip` de la versión más reciente desde la sección [**Releases**](https://github.com/JASM18/Arbol-B/releases) del repositorio.
+2. Descomprime el `.zip` en la carpeta que prefieras.
+3. Antes de la primera ejecución, instala el **Visual C++ Redistributable** de Microsoft (solo se necesita una vez por computadora). Es un instalador oficial y gratuito de Microsoft:
+   [https://aka.ms/vs/17/release/vc_redist.x64.exe](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+4. Abre `ArbolB_Grafico.exe` con doble clic.
+
+> **Importante**: no muevas el `ArbolB_Grafico.exe` fuera de su carpeta. El ejecutable necesita las librerías (`.dll`) y carpetas que vienen junto a él dentro del `.zip`. Si lo sacas solo, no abrirá.
+
+#### Linux
+
+En Linux es necesario tener Qt 6 instalado en el sistema (ver la sección de desarrolladores para el comando de instalación) y compilar desde el código fuente, ya que los binarios pueden variar entre distribuciones.
+
+---
+
+### Para desarrolladores (compilar desde el código)
+
+#### 1. Instalar las dependencias
+
+**En Linux (Arch / CachyOS):**
+```bash
+sudo pacman -S cmake qt6-base gcc git
+```
+
+**En Linux (Debian / Ubuntu):**
+```bash
+sudo apt install cmake qt6-base-dev g++ git
+```
+
+**En Windows:**
+1. Instala [Visual Studio](https://visualstudio.microsoft.com/) con la carga de trabajo **"Desarrollo para el escritorio con C++"** (incluye el compilador MSVC y CMake).
+2. Instala [Git para Windows](https://git-scm.com/download/win).
+3. Instala **Qt 6** con el [instalador oficial](https://www.qt.io/download-qt-installer) (requiere crear una cuenta gratuita). Durante la instalación, en los componentes, asegúrate de seleccionar **MSVC 2022 64-bit** dentro de tu versión de Qt 6. Este componente es necesario para que coincida con el compilador de Visual Studio.
+
+#### 2. Clonar el repositorio
 
 ```bash
 git clone https://github.com/JASM18/Arbol-B.git
 cd Arbol-B
 ```
 
-A partir de aquí tienes dos formas de compilar, según tu preferencia.
+#### 3. Compilar
 
-### Opción A — CMake desde la terminal (multiplataforma)
+Los comandos de CMake son los mismos en todos los sistemas. La única diferencia es la terminal que se usa:
 
-Estos comandos funcionan en **Windows, Linux y macOS** por igual. La configuración se hace en dos pasos:
+- **En Linux**: cualquier terminal.
+- **En Windows**: usa la **"Developer Command Prompt for VS"** (búscala en el menú de inicio). Es importante usar esta y no el `cmd` normal, porque es la única que tiene CMake y el compilador configurados.
+
+**Configurar el proyecto:**
 
 ```bash
 cmake -B build
+```
+
+> **Nota para Windows**: si CMake no encuentra Qt, indícale dónde está tu instalación con `-DCMAKE_PREFIX_PATH`, ajustando la ruta a tu versión y compilador de Qt:
+> ```bash
+> cmake -B build -DCMAKE_PREFIX_PATH="C:/Qt/6.11.1/msvc2022_64"
+> ```
+
+**Compilar:**
+
+```bash
 cmake --build build
 ```
 
-El primer comando prepara el proyecto en una carpeta `build`; el segundo lo compila. Se usa `cmake --build` en lugar de `make` porque es el comando que funciona en cualquier sistema operativo, sin importar si por debajo se usa Make, Ninja o MSVC.
+> Se usa `cmake --build` en lugar de `make` porque funciona igual en cualquier sistema operativo.
 
-> **Nota para Windows**: si CMake no encuentra Qt automáticamente, indícale dónde está tu instalación con `-DCMAKE_PREFIX_PATH`, por ejemplo:
-> ```bash
-> cmake -B build -DCMAKE_PREFIX_PATH="C:/Qt/6.x.x/msvc2022_64"
-> ```
-> (ajusta la ruta a tu versión y compilador de Qt).
+Al terminar, los **dos ejecutables** quedan disponibles:
 
-Al terminar, los **dos ejecutables** quedan dentro de la carpeta `build`:
-
-**En Linux/macOS:**
+**En Linux:**
 ```bash
 ./build/ArbolB_Consola    # versión con menú de texto en la terminal
 ./build/ArbolB_Grafico    # versión con interfaz gráfica
 ```
 
-**En Windows** (los ejecutables llevan extensión `.exe`, y según la configuración pueden quedar en una subcarpeta `Debug` o `Release`):
+**En Windows** (quedan dentro de una subcarpeta `Debug`):
 ```bat
-.\build\ArbolB_Consola.exe
-.\build\ArbolB_Grafico.exe
+.\build\Debug\ArbolB_Consola.exe
+.\build\Debug\ArbolB_Grafico.exe
 ```
 
-### Opción B — Code::Blocks
+#### 4. (Opcional) Generar un paquete distribuible en Windows
 
-Como el `CMakeLists.txt` puede generar un proyecto compatible con Code::Blocks, quienes usen ese IDE pueden trabajar sin tocar la terminal:
+Si quieres crear una versión que funcione en cualquier computadora con Windows **sin necesidad de tener Qt ni Visual Studio instalados**, sigue estos pasos:
+
+1. Compila en modo **Release** (más rápido y, a diferencia de Debug, sus librerías sí se pueden distribuir):
+   ```bash
+   cmake --build build --config Release
+   ```
+2. Usa la herramienta `windeployqt` de Qt para copiar todas las librerías necesarias junto al ejecutable:
+   ```bash
+   C:\Qt\6.11.1\msvc2022_64\bin\windeployqt.exe --release build\Release\ArbolB_Grafico.exe
+   ```
+   (ajusta la ruta de Qt a tu versión).
+3. Comprime **toda la carpeta** `build\Release\` en un `.zip`. Ese archivo es el que se puede compartir: cualquier persona podrá descomprimirlo y ejecutar el programa con doble clic (solo necesitará el Visual C++ Redistributable mencionado en la sección de usuarios).
+
+#### Compilar para Code::Blocks
+
+Si prefieres trabajar dentro del IDE Code::Blocks, CMake puede generar un proyecto compatible:
 
 ```bash
 cmake -B build -G "CodeBlocks - Unix Makefiles"
 ```
 
-Esto produce un archivo `.cbp` dentro de `build` que se abre directamente en Code::Blocks, donde puedes compilar y ejecutar cualquiera de los dos objetivos desde la interfaz del IDE.
-
-> En Windows, si usas Code::Blocks con MinGW, cambia el generador a `-G "CodeBlocks - MinGW Makefiles"`.
+Esto produce un archivo `.cbp` dentro de `build` que se abre directamente en Code::Blocks. En Windows con MinGW, usa el generador `"CodeBlocks - MinGW Makefiles"` en su lugar.
 
 ## Características principales
 
