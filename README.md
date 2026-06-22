@@ -8,6 +8,22 @@ Implementación de la estructura de datos **Árbol B** en C++ como proyecto univ
 
 El proyecto va más allá de una implementación de consola: a partir del mismo núcleo de la estructura de datos se generan **dos programas independientes**, uno con menú de texto en la terminal y otro con una **interfaz gráfica interactiva** construida con Qt, donde el árbol se dibuja en tiempo real como una simulación.
 
+## Características principales
+
+El proyecto está pensado como un **sistema dual** que comparte el mismo sistema de como se organiza la estructura de datos (ArbolB.hpp/ArbolB.tpp), separando completamente la lógica del árbol de su presentación (arquitectura Modelo–Vista).
+
+- **Doble objetivo de compilación**: un mismo núcleo (`ArbolB`) alimenta tanto la aplicación de consola como la gráfica, generadas en paralelo por un solo `CMakeLists.txt`.
+- **Template:** la clase `ArbolB` esta definida para un dato primitivo T con `template<typename T>`, permitiendo así poder aplicar el Árbol B para cualquier tipo de dato. En la implementación se decidió manejar datos de tipo `int` pero en general el Árbol B podría almacenar cualquier tipo de datos como `float`, `double`, `char`, etc.
+- El grado del Árbol B se define para un número entero `int` mayor o igual a 3, (No se estableció un limite máximo).
+- **Aplicación gráfica interactiva** construida con Qt, donde el árbol se dibuja en un lienzo 2D y se actualiza tras cada operación.
+- **Visualización con layout automático**: el dibujo calcula el espacio que necesita cada subárbol para que las cajas y los punteros no se superpongan, sin importar cuánto crezca el árbol.
+- **Zoom y desplazamiento**: la vista permite acercar y alejar con la rueda del mouse.
+- **Búsqueda con resaltado visual**: al buscar una clave, el nodo que la contiene se pinta de un color verde.
+- **Inserción de datos aleatorios:** se pueden añadir datos de tipo `int` de forma automatica con cantidad configurable por el usuario.
+- **Cambio de grado en tiempo de ejecución:** En la interfaz grafica, es posible cambiar el grado del Árbol B, cabe aclarar que esta función no esta implementada en la interfaz de consola y que cambiar el grado implica que se perderan por completo el árbol actual en ejecución, por lo que si se tiene un árbol con datos ya ingresados, estos se perderán y se tendrá que ingresar los datos de nuevo.
+- **Panel de información** que muestra el grado, la altura y el total de claves del árbol en todo momento.
+- **Aplicación de consola** con menú de texto completo, que conserva todas las operaciones de la estructura de datos.
+
 ## Requisitos del sistema
 
 El programa se desarrolló y se hicieron las pruebas correspondientes en el sistema operativo Windows 11 y Linux con la distribución CachyOS. Esto no quiere decir que cualquier otro sistema vaya a fallar, pero no se hicieron pruebas para otros sistemas operativos ni distribuciones.
@@ -24,8 +40,8 @@ El ejecutable de **consola** no requiere Qt: solo el compilador y CMake. El ejec
 
 Hay dos formas de usar este programa según lo que necesites:
 
-- **Solo quiero usar el programa** → ve a [Para usuarios (ejecutable listo)](#para-usuarios-ejecutable-listo).
-- **Quiero compilarlo desde el código fuente** → ve a [Para desarrolladores (compilar desde el código)](#para-desarrolladores-compilar-desde-el-código).
+- **Modo usuario (solo se desea usar el programa)** → ve a [Para usuarios (ejecutable listo)](#para-usuarios-ejecutable-listo).
+- **Modo desarrollador (para compilar desde el código fuente)** → ve a [Para desarrolladores (compilar desde el código)](#para-desarrolladores-compilar-desde-el-código).
 
 ---
 
@@ -37,15 +53,42 @@ Si solo quieres ejecutar el programa sin compilar nada, esta es la forma más se
 
 1. Descarga el archivo `.zip` de la versión más reciente desde la sección [**Releases**](https://github.com/JASM18/Arbol-B/releases) del repositorio.
 2. Descomprime el `.zip` en la carpeta que prefieras.
-3. Antes de la primera ejecución, instala el **Visual C++ Redistributable** de Microsoft (solo se necesita una vez por computadora). Es un instalador oficial y gratuito de Microsoft:
+3. Antes de la primera ejecución, instala el **Visual C++ Redistributable** de Microsoft en caso de no tenerlo instalado. Es un instalador oficial y gratuito de Microsoft:
    [https://aka.ms/vs/17/release/vc_redist.x64.exe](https://aka.ms/vs/17/release/vc_redist.x64.exe)
-4. Abre `ArbolB_Grafico.exe` con doble clic.
+4. Abre `ArbolB_Grafico.exe` y disfruta!.
 
-> **Importante**: no muevas el `ArbolB_Grafico.exe` fuera de su carpeta. El ejecutable necesita las librerías (`.dll`) y carpetas que vienen junto a él dentro del `.zip`. Si lo sacas solo, no abrirá.
+> **Importante**: no muevas el `ArbolB_Grafico.exe` fuera de su carpeta. El ejecutable necesita las librerías (`.dll`) y carpetas que vienen junto a él dentro del `.zip`. Si lo sacas solo, no abrirá. Como alternativa puedes simplemente crear un acceso directo.
 
 #### Linux
 
-En Linux es necesario tener Qt 6 instalado en el sistema (ver la sección de desarrolladores para el comando de instalación) y compilar desde el código fuente, ya que los binarios pueden variar entre distribuciones.
+En Linux no se distribuye un ejecutable listo, porque los binarios pueden variar entre distribuciones. La forma de usar el programa es compilarlo desde el código fuente:
+
+1. Instala las dependencias (El comando del ejemplo esta diseñado para CachyOS/Arch, en caso de usar otra distribución ajusta el comando según tu distribución)
+```
+sudo pacman -S cmake qt6-base gcc git
+```
+
+2. Clona el repositorio
+```
+git clone https://github.com/JASM18/Arbol-B.git
+cd Arbol-B
+```
+
+3. Compilar
+```
+cmake -B build
+cmake --build build
+```
+
+4. Aquí hay de dos sopas: Ejecutar la versión gráfica o la versión de consola
+```
+./build/ArbolB_Grafico
+```
+```
+./build/ArbolB_Consola
+```
+
+> Para otras distribuciones, ajusta el comando de instalación de dependencias (ver la sección de desarrolladores).
 
 ---
 
@@ -140,19 +183,15 @@ cmake -B build -G "CodeBlocks - Unix Makefiles"
 
 Esto produce un archivo `.cbp` dentro de `build` que se abre directamente en Code::Blocks. En Windows con MinGW, usa el generador `"CodeBlocks - MinGW Makefiles"` en su lugar.
 
-## Características principales
+#### Nota sobre los archivos de IDE
 
-El proyecto está pensado como un **sistema dual** que comparte un único núcleo de estructura de datos, separando completamente la lógica del árbol de su presentación (arquitectura Modelo–Vista).
+El repositorio **no incluye** archivos de proyecto de ningún IDE (como `.cbp` de Code::Blocks o `.vcxproj` de Visual Studio), y esto es intencional: esos archivos se **generan automáticamente** a partir del `CMakeLists.txt` y suelen contener rutas específicas de cada computadora, por lo que no tiene sentido compartirlos.
 
-- **Doble objetivo de compilación**: un mismo núcleo (`ArbolB`) alimenta tanto la aplicación de consola como la gráfica, generadas en paralelo por un solo `CMakeLists.txt`.
-- **Aplicación gráfica interactiva** construida con Qt, donde el árbol se dibuja en un lienzo 2D y se actualiza tras cada operación.
-- **Visualización con layout automático**: el dibujo calcula el espacio que necesita cada subárbol para que las cajas y los punteros no se superpongan, sin importar cuánto crezca el árbol.
-- **Zoom y desplazamiento**: la vista permite acercar y alejar con la rueda del mouse, útil para árboles grandes.
-- **Búsqueda con resaltado visual**: al buscar una clave, el nodo que la contiene se pinta de un color distinto.
-- **Inserción de datos aleatorios** en lote, con cantidad configurable por el usuario.
-- **Cambio de grado en tiempo de ejecución**, sin necesidad de cerrar y reabrir el programa.
-- **Panel de información** que muestra el grado, la altura y el total de claves del árbol en todo momento.
-- **Aplicación de consola** con menú de texto completo, que conserva todas las operaciones de la estructura de datos.
+El `CMakeLists.txt` es el archivo de proyecto universal. A partir de él, cada quien puede trabajar con la herramienta que prefiera:
+
+- **Editor de texto + terminal**: edita el código en cualquier editor (VS Code, Neovim, Kate, etc.) y compila con `cmake --build build`. No se necesita ningún archivo de proyecto.
+- **Code::Blocks**: genera el `.cbp` con el comando de la sección anterior y ábrelo.
+- **IDEs que entienden CMake directamente** (Qt Creator, CLion, VS Code con la extensión de CMake): simplemente abre la carpeta del proyecto o el `CMakeLists.txt`, y el IDE se configura solo. Para este proyecto, **Qt Creator** es una opción especialmente cómoda por su integración con Qt.
 
 ## ¿Qué es un Árbol B?
 
