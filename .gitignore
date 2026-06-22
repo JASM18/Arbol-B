@@ -1,9 +1,38 @@
-# Ignorar configuraciones de CLion
-.idea/
+# Carpetas de compilación (generadas por CMake)
+build/
+Build/
+out/
 cmake-build-*/
 
-# Ignorar configuraciones de Code::Blocks
+# Archivos generados por CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cbp
+
+# Ejecutables, objetos y librerías
+*.exe
+*.o
+*.obj
+*.out
+*.dll
+ArbolB_Consola
+ArbolB_Grafico
+
+# Configuraciones de IDEs
+# CLion
+.idea/
+# Code::Blocks
 bin/
 obj/
 *.depend
 *.layout
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.user
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
