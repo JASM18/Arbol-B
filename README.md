@@ -10,7 +10,7 @@ El proyecto va más allá de una implementación de consola: a partir del mismo 
 
 ## Características principales
 
-El proyecto está pensado como un **sistema dual** que comparte el mismo sistema de como se organiza la estructura de datos (ArbolB.hpp/ArbolB.tpp), separando completamente la lógica del árbol de su presentación (arquitectura Modelo–Vista).
+El proyecto está pensado como un **sistema dual** que comparte el mismo núcleo de la estructura de datos (ArbolB.hpp/ArbolB.tpp), separando completamente la lógica del árbol de su presentación (arquitectura Modelo–Vista).
 
 - **Doble objetivo de compilación**: un mismo núcleo (`ArbolB`) alimenta tanto la aplicación de consola como la gráfica, generadas en paralelo por un solo `CMakeLists.txt`.
 - **Template:** la clase `ArbolB` esta definida para un dato primitivo T con `template<typename T>`, permitiendo así poder aplicar el Árbol B para cualquier tipo de dato. En la implementación se decidió manejar datos de tipo `int` pero en general el Árbol B podría almacenar cualquier tipo de datos como `float`, `double`, `char`, etc.
@@ -224,31 +224,97 @@ Esta simetría (crecer y decrecer únicamente desde la raíz) es lo que garantiz
 
 ## Preview de salidas
 
+Cabe aclarar que las siguientes previsualizaciones se hicieron en un Árbol B de grado 5 y con 25 datos de tipo `int` generados de forma aleatoria.
+
 ### Aplicación de consola
 
 La versión de terminal presenta un menú interactivo y muestra el árbol en formato de texto tras cada operación.
 
-<!-- Sugerencia: agrega aquí una captura del menú de consola -->
-<!-- ![Salida de consola](docs/consola.png) -->
-
+#### Menú principal:
 ```
-[30, 60, 90, 120]
-    [10, 20]
-    [40, 50]
-    [70, 80]
-    [100, 110]
-    [130, 140, 150]
+==================================
+Proyecto final: Árbol B
+==================================
+
+--- Árbol B(M=5) actual ---
+[ ]
+------------------------
+
+Opciones:
+	1) Agregar un valor.
+	2) Eliminar un valor.
+	3) Buscar un elemento.
+	4) Obtener el número de claves totales.
+	5) Obtener la altura del árbol.
+	6) Obtener el grado del árbol.
+	7) Saber si el árbol está vacío.
+	8) Vaciar el árbol.
+	9) Imprimir (en orden).
+	10) Imprimir (como árbol).
+	11) Imprimir (como árbol acostado).
+	12) Agregar datos aleatorios.
+	13) Área de pruebas.
+	14) Salir del programa.
+Elige una opción: 
+```
+
+#### Imprimir
+En la versión de la terminal hay tres maneras diferentes de como se imprime el Árbol B
+
+Imprimir (en orden)
+```
+[ 25, 112, 135, 137, 198, 228, 245, 260, 306, 314, 316, 394, 440, 487, 531, 567, 621, 640, 642, 824, 825, 839, 954, 962, 976] 
+```
+
+Imprimir (como árbol)
+```
+[314] 
+[137, 245] [487, 621, 824, 954] 
+[25, 112, 135] [198, 228] [260, 306] [316, 394, 440] [531, 567] [640, 642] [825, 839] [962, 976] 
+```
+
+Imprimir (como árbol acostado)
+```
+[314]
+    [137, 245]
+        [25, 112, 135]
+        [198, 228]
+        [260, 306]
+    [487, 621, 824, 954]
+        [316, 394, 440]
+        [531, 567]
+        [640, 642]
+        [825, 839]
+        [962, 976]
 ```
 
 ### Aplicación gráfica
 
 La versión gráfica dibuja el árbol como una estructura jerárquica navegable, con zoom, búsqueda resaltada y panel de información.
 
-<!-- Sugerencia: agrega aquí una captura de la ventana de la GUI -->
-<!-- ![Interfaz gráfica](docs/gui.png) -->
+<img width="1828" height="1038" alt="image" src="https://github.com/user-attachments/assets/a7679259-9f65-487e-a7d3-86868522918a" />
+
+## Nota sobre el alcance del proyecto y uso de IA
+
+El proyecto solicitado para el curso universitario consistía únicamente en la 
+**implementación de la estructura de datos Árbol B en C++** y su manejo a través 
+de la **aplicación de consola** (`ArbolB.hpp`, `ArbolB.tpp` y el menú en terminal). 
+Esa parte fue desarrollada como trabajo del curso.
+
+La **interfaz gráfica** (construida con Qt), el sistema de **compilación dual con 
+CMake**, el empaquetado para distribución y la documentación del readme de este repositorio 
+no formaban parte de los requisitos del curso. Se desarrollaron de forma 
+adicional, por interés propio y como ejercicio de aprendizaje, una vez concluida 
+la entrega académica.
+
+Para esta parte adicional (la interfaz gráfica y la configuración del entorno) se 
+utilizó **inteligencia artificial como herramienta de apoyo**, tanto para aprender 
+las tecnologías involucradas (Qt, CMake) como para acelerar el desarrollo. La 
+lógica central del Árbol B —el núcleo del proyecto académico— corresponde al 
+trabajo realizado para el curso.
 
 ## Conclusiones
 
 Este proyecto comenzó como una implementación académica de la estructura de datos Árbol B y evolucionó hasta convertirse en una aplicación con separación entre la lógica de datos y su presentación, capaz de compilarse en dos formas distintas a partir de un mismo núcleo.
 
-El resultado no solo cumple con las propiedades teóricas de un Árbol B (balance perfecto, búsqueda eficiente y manejo correcto de inserciones y eliminaciones), sino que además ofrece una herramienta visual que permite observar en tiempo real cómo la estructura se reorganiza con cada operación, lo cual resulta especialmente útil para comprender el comportamiento del algoritmo.
+El resultado final cumple con las propiedades teóricas de un Árbol B y como trabajo adicional extra clase, se ofrece una herramienta visual que permite observar en tiempo real cómo la estructura se reorganiza con cada operación, lo cual resulta especialmente útil para comprender el comportamiento del algoritmo.
