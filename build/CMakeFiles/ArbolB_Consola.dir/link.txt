@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/ArbolB_Consola.dir/link.d CMakeFiles/ArbolB_Consola.dir/ArbolB_Consola_autogen/mocs_compilation.cpp.o CMakeFiles/ArbolB_Consola.dir/main_consola.cpp.o CMakeFiles/ArbolB_Consola.dir/Aleatorio.cpp.o -o ArbolB_Consola

@@ -1,8 +1,0 @@
-/home/jasm18/Documentos/4to semestre/Arbol-B/build/CMakeFiles/ArbolB_Consola.dir
-/home/jasm18/Documentos/4to semestre/Arbol-B/build/CMakeFiles/ArbolB_Grafico.dir
-/home/jasm18/Documentos/4to semestre/Arbol-B/build/CMakeFiles/edit_cache.dir
-/home/jasm18/Documentos/4to semestre/Arbol-B/build/CMakeFiles/rebuild_cache.dir
-/home/jasm18/Documentos/4to semestre/Arbol-B/build/CMakeFiles/ArbolB_Consola_autogen_timestamp_deps.dir
-/home/jasm18/Documentos/4to semestre/Arbol-B/build/CMakeFiles/ArbolB_Consola_autogen.dir
-/home/jasm18/Documentos/4to semestre/Arbol-B/build/CMakeFiles/ArbolB_Grafico_autogen_timestamp_deps.dir
-/home/jasm18/Documentos/4to semestre/Arbol-B/build/CMakeFiles/ArbolB_Grafico_autogen.dir
